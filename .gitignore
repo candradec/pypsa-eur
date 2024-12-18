@@ -51,8 +51,8 @@ dconf
 /data/.nfs*
 /data/retro/*
 /data/bundle/nuts*
-pypsa_eur/data/gas_network/scigrid-gas/
-pypsa_eur/data/costs_*.csv
+.nox/data/gas_network/scigrid-gas/
+.nox/data/costs_*.csv
 
 dask-worker-space/
 publications.jrc.ec.europa.eu/
