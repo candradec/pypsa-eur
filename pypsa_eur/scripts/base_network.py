@@ -91,12 +91,8 @@ from scipy.sparse import csgraph
 from scipy.spatial import KDTree
 from shapely.geometry import Point
 
-from pypsa_eur.scripts._helpers import (
-    REGION_COLS,
-    configure_logging,
-    get_snapshots,
-    set_scenario_config,
-)
+from pypsa_eur.scripts._helpers import (REGION_COLS, configure_logging,
+                                        get_snapshots, set_scenario_config)
 
 PD_GE_2_2 = parse(pd.__version__) >= Version("2.2")
 

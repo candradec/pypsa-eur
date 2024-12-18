@@ -506,7 +506,7 @@ def calculate_weighted_prices(n, label, weighted_prices):
         )
         for tech in value:
             names = n.links.index[
-                n.links.index.to_series().str[-len(tech) - 5 : -5] == tech
+                n.links.index.to_series().str[-len(tech) - 5: -5] == tech
             ]
 
             if names.empty:

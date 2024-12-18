@@ -127,11 +127,8 @@ import xarray as xr
 from build_shapes import _simplify_polys
 from dask.distributed import Client
 
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    get_snapshots,
-    set_scenario_config,
-)
+from pypsa_eur.scripts._helpers import (configure_logging, get_snapshots,
+                                        set_scenario_config)
 
 logger = logging.getLogger(__name__)
 

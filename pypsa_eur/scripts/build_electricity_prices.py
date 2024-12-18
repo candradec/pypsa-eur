@@ -39,7 +39,7 @@ if __name__ == "__main__":
         try:
             gen = client.query_day_ahead_prices(country, start=start, end=end)
             gen = gen.tz_localize(None).resample("1h").mean()
-            gen = gen.loc[start.tz_localize(None) : end.tz_localize(None)]
+            gen = gen.loc[start.tz_localize(None): end.tz_localize(None)]
             prices.append(gen)
         except NoMatchingDataError:
             unavailable_countries.append(country)

@@ -495,13 +495,9 @@ def mock_snakemake(
     from snakemake.api import Workflow
     from snakemake.common import SNAKEFILE_CHOICES
     from snakemake.script import Snakemake
-    from snakemake.settings.types import (
-        ConfigSettings,
-        DAGSettings,
-        ResourceSettings,
-        StorageSettings,
-        WorkflowSettings,
-    )
+    from snakemake.settings.types import (ConfigSettings, DAGSettings,
+                                          ResourceSettings, StorageSettings,
+                                          WorkflowSettings)
 
     script_dir = Path(__file__).parent.resolve()
     if root_dir is None:
@@ -948,7 +944,7 @@ def rename_techs(label: str) -> str:
 
     for ptr in prefix_to_remove:
         if label[: len(ptr)] == ptr:
-            label = label[len(ptr) :]
+            label = label[len(ptr):]
 
     for rif in rename_if_contains:
         if rif in label:

@@ -16,13 +16,14 @@ a heat potential (in GWh) and a cost (in EUR/MW).
 This scripts overlays that map with the network's regions, and builds a csv with CAPEX, OPEX and p_nom_max
 """
 
-from shapely.geometry import Polygon
-import xarray as xr
-import pandas as pd
-import numpy as np
-import geopandas as gpd
 import json
 import logging
+
+import geopandas as gpd
+import numpy as np
+import pandas as pd
+import xarray as xr
+from shapely.geometry import Polygon
 
 logger = logging.getLogger(__name__)
 

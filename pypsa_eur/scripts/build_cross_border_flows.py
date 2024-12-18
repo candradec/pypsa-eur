@@ -9,7 +9,8 @@ import logging
 import pandas as pd
 import pypsa
 from entsoe import EntsoePandasClient
-from entsoe.exceptions import InvalidBusinessParameterError, NoMatchingDataError
+from entsoe.exceptions import (InvalidBusinessParameterError,
+                               NoMatchingDataError)
 from requests import HTTPError
 
 from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
@@ -52,7 +53,7 @@ if __name__ == "__main__":
                 f"{from_country} - {to_country}"
             )
             flow = flow.tz_localize(None).resample("1h").mean()
-            flow = flow.loc[start.tz_localize(None) : end.tz_localize(None)]
+            flow = flow.loc[start.tz_localize(None): end.tz_localize(None)]
             flows.append(flow)
         except (HTTPError, NoMatchingDataError, InvalidBusinessParameterError):
             unavailable_borders.append(f"{from_country}-{to_country}")

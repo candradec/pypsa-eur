@@ -41,9 +41,8 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 import xarray as xr
-from central_heating_temperature_approximator import (
-    CentralHeatingTemperatureApproximator,
-)
+from central_heating_temperature_approximator import \
+    CentralHeatingTemperatureApproximator
 
 from pypsa_eur.scripts._helpers import set_scenario_config
 

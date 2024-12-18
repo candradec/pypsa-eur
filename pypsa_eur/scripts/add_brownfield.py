@@ -15,12 +15,9 @@ import xarray as xr
 from add_existing_baseyear import add_build_year_to_new_assets
 from pypsa.clustering.spatial import normed_or_uniform
 
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    get_snapshots,
-    set_scenario_config,
-    update_config_from_wildcards,
-)
+from pypsa_eur.scripts._helpers import (configure_logging, get_snapshots,
+                                        set_scenario_config,
+                                        update_config_from_wildcards)
 
 logger = logging.getLogger(__name__)
 idx = pd.IndexSlice

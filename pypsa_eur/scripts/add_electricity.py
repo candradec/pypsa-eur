@@ -120,15 +120,12 @@ import powerplantmatching as pm
 import pypsa
 import xarray as xr
 from powerplantmatching.export import map_country_bus
-from pypsa.clustering.spatial import DEFAULT_ONE_PORT_STRATEGIES, normed_or_uniform
+from pypsa.clustering.spatial import (DEFAULT_ONE_PORT_STRATEGIES,
+                                      normed_or_uniform)
 
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    get_snapshots,
-    rename_techs,
-    set_scenario_config,
-    update_p_nom_max,
-)
+from pypsa_eur.scripts._helpers import (configure_logging, get_snapshots,
+                                        rename_techs, set_scenario_config,
+                                        update_p_nom_max)
 
 idx = pd.IndexSlice
 

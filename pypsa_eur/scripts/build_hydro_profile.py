@@ -67,11 +67,8 @@ import geopandas as gpd
 import pandas as pd
 from numpy.polynomial import Polynomial
 
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    get_snapshots,
-    set_scenario_config,
-)
+from pypsa_eur.scripts._helpers import (configure_logging, get_snapshots,
+                                        set_scenario_config)
 
 cc = coco.CountryConverter()
 

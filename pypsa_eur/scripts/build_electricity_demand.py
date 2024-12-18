@@ -41,11 +41,8 @@ import numpy as np
 import pandas as pd
 from pandas import Timedelta as Delta
 
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    get_snapshots,
-    set_scenario_config,
-)
+from pypsa_eur.scripts._helpers import (configure_logging, get_snapshots,
+                                        set_scenario_config)
 
 logger = logging.getLogger(__name__)
 
@@ -132,13 +129,13 @@ def copy_timeslice(load, cntry, start, stop, delta, fn_load=None):
     if start in load.index and stop in load.index:
         if start - delta in load.index and stop - delta in load.index and cntry in load:
             load.loc[start:stop, cntry] = load.loc[
-                start - delta : stop - delta, cntry
+                start - delta: stop - delta, cntry
             ].values
         elif fn_load is not None and cntry in load:
             duration = pd.date_range(freq="h", start=start - delta, end=stop - delta)
             load_raw = load_timeseries(fn_load, duration, [cntry])
             load.loc[start:stop, cntry] = load_raw.loc[
-                start - delta : stop - delta, cntry
+                start - delta: stop - delta, cntry
             ].values
 
 
