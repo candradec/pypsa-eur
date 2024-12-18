@@ -49,8 +49,7 @@ def plot_ch4_map(n):
     fossil_gas.rename(index=lambda x: x.replace(" gas", ""), inplace=True)
     fossil_gas = fossil_gas.reindex(n.buses.index).fillna(0)
     # make a fake MultiIndex so that area is correct for legend
-    fossil_gas.index = pd.MultiIndex.from_product(
-        [fossil_gas.index, ["fossil gas"]])
+    fossil_gas.index = pd.MultiIndex.from_product([fossil_gas.index, ["fossil gas"]])
 
     methanation_i = n.links.query("carrier == 'Sabatier'").index
     methanation = (
@@ -70,8 +69,7 @@ def plot_ch4_map(n):
         .rename(index=lambda x: x.replace(" gas", ""))
     )
     # make a fake MultiIndex so that area is correct for legend
-    methanation.index = pd.MultiIndex.from_product(
-        [methanation.index, ["methanation"]])
+    methanation.index = pd.MultiIndex.from_product([methanation.index, ["methanation"]])
 
     biogas_i = n.stores[n.stores.carrier == "biogas"].index
     biogas = (
@@ -251,8 +249,7 @@ if __name__ == "__main__":
     map_opts = snakemake.params.plotting["map"]
 
     if map_opts["boundaries"] is None:
-        map_opts["boundaries"] = regions.total_bounds[[
-            0, 2, 1, 3]] + [-1, 1, -1, 1]
+        map_opts["boundaries"] = regions.total_bounds[[0, 2, 1, 3]] + [-1, 1, -1, 1]
 
     proj = load_projection(snakemake.params.plotting)
 

@@ -27,8 +27,7 @@ if __name__ == "__main__":
     configure_logging(snakemake)
     set_scenario_config(snakemake)
 
-    disable_progress = snakemake.config["run"].get(
-        "disable_progressbar", False)
+    disable_progress = snakemake.config["run"].get("disable_progressbar", False)
     url_eurostat = (
         # "https://ec.europa.eu/eurostat/documents/38154/4956218/Balances-April2023.zip" # link down
         "https://tubcloud.tu-berlin.de/s/prkJpL7B9M3cDPb/download/Balances-April2023.zip"

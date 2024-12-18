@@ -37,14 +37,11 @@ if __name__ == "__main__":
     )
 
     if len(historic.index) > len(n.snapshots):
-        historic = historic.resample(
-            n.snapshots.inferred_freq).mean().loc[n.snapshots]
+        historic = historic.resample(n.snapshots.inferred_freq).mean().loc[n.snapshots]
 
-    optimized = n.buses_t.marginal_price.groupby(
-        n.buses.country, axis=1).mean()
+    optimized = n.buses_t.marginal_price.groupby(n.buses.country, axis=1).mean()
 
-    data = pd.concat([historic, optimized], keys=[
-                     "Historic", "Optimized"], axis=1)
+    data = pd.concat([historic, optimized], keys=["Historic", "Optimized"], axis=1)
     data.columns.names = ["Kind", "Country"]
 
     fig, ax = plt.subplots(figsize=(6, 6))

@@ -30,8 +30,7 @@ if __name__ == "__main__":
 
     configure_logging(snakemake)
     set_scenario_config(snakemake)
-    disable_progress = snakemake.config["run"].get(
-        "disable_progressbar", False)
+    disable_progress = snakemake.config["run"].get("disable_progressbar", False)
 
     to_fn = snakemake.output[0]
     to_fn_zp = to_fn + ".zip"

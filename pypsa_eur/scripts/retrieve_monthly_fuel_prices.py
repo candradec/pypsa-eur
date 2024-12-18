@@ -30,8 +30,7 @@ if __name__ == "__main__":
     to_fn = Path(rootpath) / Path(snakemake.output[0])
 
     logger.info(f"Downloading monthly fuel prices from '{url}'.")
-    disable_progress = snakemake.config["run"].get(
-        "disable_progressbar", False)
+    disable_progress = snakemake.config["run"].get("disable_progressbar", False)
     progress_retrieve(url, to_fn, disable=disable_progress)
 
     logger.info(f"Monthly fuel prices available at {to_fn}")

@@ -115,8 +115,7 @@ if __name__ == "__main__":
     excluder = atlite.ExclusionContainer(crs=3035, res=res)
 
     if params["natura"]:
-        excluder.add_raster(snakemake.input.natura,
-                            nodata=0, allow_no_overlap=True)
+        excluder.add_raster(snakemake.input.natura, nodata=0, allow_no_overlap=True)
 
     for dataset in ["corine", "luisa"]:
         kwargs = {"nodata": 0} if dataset == "luisa" else {}
@@ -156,8 +155,7 @@ if __name__ == "__main__":
         # use named function np.greater with partially frozen argument instead
         # and exclude areas where: -max_depth > grid cell depth
         func = functools.partial(np.greater, -params["max_depth"])
-        excluder.add_raster(snakemake.input.gebco,
-                            codes=func, crs=4326, nodata=-1000)
+        excluder.add_raster(snakemake.input.gebco, codes=func, crs=4326, nodata=-1000)
 
     if params.get("min_depth"):
         func = functools.partial(np.greater, -params["min_depth"])

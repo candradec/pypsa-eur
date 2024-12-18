@@ -109,15 +109,13 @@ def retrieve_osm_data(
                 logger.info(" - Done.")
                 break  # Exit the retry loop on success
             except (json.JSONDecodeError, requests.exceptions.RequestException) as e:
-                logger.error(
-                    f"Error for feature '{f}' in country {country}: {e}")
+                logger.error(f"Error for feature '{f}' in country {country}: {e}")
                 logger.debug(
                     f"Response text: {response.text if response else 'No response'}"
                 )
                 if attempt < retries - 1:
                     wait_time += 15
-                    logger.info(
-                        f"Waiting {wait_time} seconds before retrying...")
+                    logger.info(f"Waiting {wait_time} seconds before retrying...")
                     time.sleep(wait_time)
                 else:
                     logger.error(
@@ -131,8 +129,7 @@ def retrieve_osm_data(
                 )
                 if attempt < retries - 1:
                     wait_time += 10
-                    logger.info(
-                        f"Waiting {wait_time} seconds before retrying...")
+                    logger.info(f"Waiting {wait_time} seconds before retrying...")
                     time.sleep(wait_time)
                 else:
                     logger.error(

@@ -66,8 +66,7 @@ def sort_one_country(country, df):
 
 
 def cross_border_time_series(countries, data):
-    fig, ax = plt.subplots(2 * len(countries), 1,
-                           figsize=(15, 10 * len(countries)))
+    fig, ax = plt.subplots(2 * len(countries), 1, figsize=(15, 10 * len(countries)))
     axis = 0
 
     for country in countries:
@@ -88,8 +87,7 @@ def cross_border_time_series(countries, data):
             )
             title = "Historic" if (axis % 2) == 0 else "Optimized"
             ax[axis].set_title(
-                f"{title} Import / Export for " +
-                cc.convert(country, to="name_short")
+                f"{title} Import / Export for " + cc.convert(country, to="name_short")
             )
 
             # Custom legend elements
@@ -206,8 +204,7 @@ if __name__ == "__main__":
     )
 
     if len(historic.index) > len(n.snapshots):
-        historic = historic.resample(
-            n.snapshots.inferred_freq).mean().loc[n.snapshots]
+        historic = historic.resample(n.snapshots.inferred_freq).mean().loc[n.snapshots]
 
     # Preparing network data to be shaped similar to ENTSOE datastructure
     optimized_links = n.links_t.p0.rename(

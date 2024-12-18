@@ -40,8 +40,7 @@ if __name__ == "__main__":
     print(to_fn)
 
     logger.info(f"Downloading technology data from '{url}'.")
-    disable_progress = snakemake.config["run"].get(
-        "disable_progressbar", False)
+    disable_progress = snakemake.config["run"].get("disable_progressbar", False)
     progress_retrieve(url, to_fn, disable=disable_progress)
 
     logger.info(f"Technology data available at at {to_fn}")

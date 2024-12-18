@@ -374,8 +374,7 @@ def _distribute_to_circuits(row):
         cables = int(row["cables"])
         circuits = cables / 3
 
-    single_circuit = int(
-        max(1, np.floor_divide(circuits, row["split_elements"])))
+    single_circuit = int(max(1, np.floor_divide(circuits, row["split_elements"])))
     single_circuit = str(single_circuit)
 
     return single_circuit
@@ -415,8 +414,7 @@ def _import_lines_and_cables(path_lines):
             if (
                 os.path.exists(ip) and os.path.getsize(ip) > 400
             ):  # unpopulated OSM json is about 51 bytes
-                country = os.path.basename(
-                    os.path.dirname(path_lines[key][idx]))
+                country = os.path.basename(os.path.dirname(path_lines[key][idx]))
 
                 logger.info(
                     f" - Importing {key} {str(idx+1).zfill(2)}/{str(len(path_lines[key])).zfill(2)}: {ip}"
@@ -487,8 +485,7 @@ def _import_routes_relation(path_relation):
             if (
                 os.path.exists(ip) and os.path.getsize(ip) > 400
             ):  # unpopulated OSM json is about 51 bytes
-                country = os.path.basename(
-                    os.path.dirname(path_relation[key][idx]))
+                country = os.path.basename(os.path.dirname(path_relation[key][idx]))
 
                 logger.info(
                     f" - Importing {key} {str(idx+1).zfill(2)}/{str(len(path_relation[key])).zfill(2)}: {ip}"
@@ -636,13 +633,11 @@ def _drop_duplicate_lines(df_lines):
     Finally, the updated dataframe without multiple duplicates is returned.
     """
     logger.info("Dropping duplicate lines.")
-    duplicate_rows = df_lines[df_lines.duplicated(
-        subset=["id"], keep=False)].copy()
+    duplicate_rows = df_lines[df_lines.duplicated(subset=["id"], keep=False)].copy()
 
     # Group rows by id and aggregate the country column to a string split by semicolon
     grouped_duplicates = (
-        duplicate_rows.groupby("id")["country"].agg(
-            lambda x: ";".join(x)).reset_index()
+        duplicate_rows.groupby("id")["country"].agg(lambda x: ";".join(x)).reset_index()
     )
     duplicate_rows.drop_duplicates(subset="id", inplace=True)
     duplicate_rows.drop(columns=["country"], inplace=True)
@@ -692,8 +687,7 @@ def _filter_by_voltage(df, min_voltage=220000):
     list_voltages = list_voltages[list_voltages >= int(min_voltage)]
     list_voltages = list_voltages.astype(str)
 
-    bool_voltages = df["voltage"].apply(
-        _check_voltage, list_voltages=list_voltages)
+    bool_voltages = df["voltage"].apply(_check_voltage, list_voltages=list_voltages)
     len_before = len(df)
     df = df[bool_voltages]
     len_after = len(df)
@@ -735,8 +729,7 @@ def _clean_substations(df_substations, list_voltages):
     df_substations.loc[:, "split_count"] = df_substations["id"].apply(
         lambda x: x.split("-")[1] if "-" in x else "0"
     )
-    df_substations.loc[:, "split_count"] = df_substations["split_count"].astype(
-        int)
+    df_substations.loc[:, "split_count"] = df_substations["split_count"].astype(int)
 
     bool_split = df_substations["split_elements"] > 1
     bool_frequency_len = (
@@ -744,12 +737,11 @@ def _clean_substations(df_substations, list_voltages):
         == df_substations["split_elements"]
     )
 
-    def op_freq(row): return row["frequency"].split(
-        ";")[row["split_count"] - 1]
+    def op_freq(row):
+        return row["frequency"].split(";")[row["split_count"] - 1]
 
     df_substations.loc[bool_frequency_len & bool_split, "frequency"] = (
-        df_substations.loc[bool_frequency_len &
-                           bool_split,].apply(op_freq, axis=1)
+        df_substations.loc[bool_frequency_len & bool_split,].apply(op_freq, axis=1)
     )
 
     df_substations = _split_cells(df_substations, cols=["frequency"])
@@ -892,8 +884,7 @@ def _clean_lines(df_lines, list_voltages):
 
     # Clean those values where multiple circuit values are present, divided by
     # semicolon
-    has_multiple_circuits = df_lines["circuits"].apply(
-        lambda x: len(x.split(";")) > 1)
+    has_multiple_circuits = df_lines["circuits"].apply(lambda x: len(x.split(";")) > 1)
     circuits_match_split_elements = df_lines.apply(
         lambda row: len(row["circuits"].split(";")) == row["split_elements"],
         axis=1,
@@ -902,8 +893,7 @@ def _clean_lines(df_lines, list_voltages):
     bool_cables = has_multiple_circuits & circuits_match_split_elements & is_not_cleaned
 
     df_lines.loc[bool_cables, "circuits"] = df_lines.loc[bool_cables].apply(
-        lambda row: str(row["circuits"].split(
-            ";")[int(row["id"].split("-")[-1]) - 1]),
+        lambda row: str(row["circuits"].split(";")[int(row["id"].split("-")[-1]) - 1]),
         axis=1,
     )
 
@@ -913,8 +903,7 @@ def _clean_lines(df_lines, list_voltages):
 
     # Clean those values where multiple cables values are present, divided by
     # semicolon
-    has_multiple_cables = df_lines["cables"].apply(
-        lambda x: len(x.split(";")) > 1)
+    has_multiple_cables = df_lines["cables"].apply(lambda x: len(x.split(";")) > 1)
     cables_match_split_elements = df_lines.apply(
         lambda row: len(row["cables"].split(";")) == row["split_elements"],
         axis=1,
@@ -927,8 +916,7 @@ def _clean_lines(df_lines, list_voltages):
             max(
                 1,
                 np.floor_divide(
-                    int(row["cables"].split(";")[
-                        int(row["id"].split("-")[-1]) - 1]), 3
+                    int(row["cables"].split(";")[int(row["id"].split("-")[-1]) - 1]), 3
                 ),
             )
         ),
@@ -943,8 +931,7 @@ def _clean_lines(df_lines, list_voltages):
     bool_leftover = df_lines["cleaned"] == False
     if sum(bool_leftover) > 0:
         str_id = "; ".join(str(id) for id in df_lines.loc[bool_leftover, "id"])
-        logger.info(
-            f"Setting circuits of remaining {sum(bool_leftover)} lines to 1...")
+        logger.info(f"Setting circuits of remaining {sum(bool_leftover)} lines to 1...")
         logger.info(f"Lines affected: {str_id}")
 
     df_lines.loc[bool_leftover, "circuits"] = "1"
@@ -995,10 +982,8 @@ def _create_substations_poi(df_substations, tol=BUS_TOL / 2):
         lambda polygon: polylabel(polygon, tol)
     )
 
-    df_substations.loc[:, "lon"] = df_substations["geometry"].apply(
-        lambda x: x.x)
-    df_substations.loc[:, "lat"] = df_substations["geometry"].apply(
-        lambda x: x.y)
+    df_substations.loc[:, "lon"] = df_substations["geometry"].apply(lambda x: x.x)
+    df_substations.loc[:, "lat"] = df_substations["geometry"].apply(lambda x: x.y)
 
     return df_substations
 
@@ -1024,8 +1009,7 @@ def _create_lines_geometry(df_lines):
     df_lines = df_lines.copy()
     df_lines.loc[:, "geometry"] = df_lines.apply(_create_linestring, axis=1)
 
-    bool_circle = df_lines["geometry"].apply(
-        lambda x: x.coords[0] == x.coords[-1])
+    bool_circle = df_lines["geometry"].apply(lambda x: x.coords[0] == x.coords[-1])
     df_lines = df_lines[~bool_circle]
 
     return df_lines
@@ -1251,8 +1235,7 @@ def _import_substations(path_substations):
             if (
                 os.path.exists(ip) and os.path.getsize(ip) > 400
             ):  # unpopulated OSM json is about 51 bytes
-                country = os.path.basename(
-                    os.path.dirname(path_substations[key][idx]))
+                country = os.path.basename(os.path.dirname(path_substations[key][idx]))
                 logger.info(
                     f" - Importing {key} {str(idx+1).zfill(2)}/{str(len(path_substations[key])).zfill(2)}: {ip}"
                 )
@@ -1284,8 +1267,7 @@ def _import_substations(path_substations):
                 df = pd.concat([df, tags], axis="columns")
 
                 if key == "substations_way":
-                    df.drop(columns=["type", "tags",
-                            "bounds", "nodes"], inplace=True)
+                    df.drop(columns=["type", "tags", "bounds", "nodes"], inplace=True)
                     df_substations_way = pd.concat(
                         [df_substations_way, df], axis="rows"
                     )
@@ -1303,11 +1285,9 @@ def _import_substations(path_substations):
         logger.info("---")
 
     df_substations_way.drop_duplicates(subset="id", keep="first", inplace=True)
-    df_substations_relation.drop_duplicates(
-        subset="id", keep="first", inplace=True)
+    df_substations_relation.drop_duplicates(subset="id", keep="first", inplace=True)
 
-    df_substations_way["geometry"] = df_substations_way.apply(
-        _create_polygon, axis=1)
+    df_substations_way["geometry"] = df_substations_way.apply(_create_polygon, axis=1)
 
     # Normalise the members column of df_substations_relation
     cols_members = ["id", "type", "ref", "role", "geometry"]
@@ -1502,8 +1482,7 @@ def _extend_lines_to_substations(gdf_lines, gdf_substations_polygon, tol=BUS_TOL
     )
     gdf = gpd.sjoin(
         gdf_lines,
-        gdf_substations_polygon.drop_duplicates(
-            subset="polygon", inplace=False),
+        gdf_substations_polygon.drop_duplicates(subset="polygon", inplace=False),
         how="left",
         lsuffix="line",
         rsuffix="bus",
@@ -1524,8 +1503,7 @@ def _extend_lines_to_substations(gdf_lines, gdf_substations_polygon, tol=BUS_TOL
     )
     gdf.columns = ["line_id", "bus_dict"]
 
-    gdf["intersects_bus"] = gdf.apply(
-        lambda row: len(row["bus_dict"]) > 0, axis=1)
+    gdf["intersects_bus"] = gdf.apply(lambda row: len(row["bus_dict"]) > 0, axis=1)
 
     gdf.loc[:, "line_geometry"] = gdf.join(
         gdf_lines.set_index("line_id")["geometry"], on="line_id"
@@ -1533,8 +1511,7 @@ def _extend_lines_to_substations(gdf_lines, gdf_substations_polygon, tol=BUS_TOL
 
     # Polygons at the endpoints of the linestring
     gdf["bus_endpoints"] = gdf.apply(
-        lambda row: _get_polygons_at_endpoints(
-            row["line_geometry"], row["bus_dict"]),
+        lambda row: _get_polygons_at_endpoints(row["line_geometry"], row["bus_dict"]),
         axis=1,
     )
 
@@ -1613,14 +1590,12 @@ if __name__ == "__main__":
         crs=crs,
     )
 
-    gdf_substations_polygon["geometry"] = gdf_substations_polygon.polygon.copy(
-    )
+    gdf_substations_polygon["geometry"] = gdf_substations_polygon.polygon.copy()
 
     # Continue cleaning of converters
     logger.info("---")
     logger.info("CONVERTERS")
-    logger.info(
-        f"Extracting {len(df_converters)} converters as subset of substations.")
+    logger.info(f"Extracting {len(df_converters)} converters as subset of substations.")
     df_converters, list_converter_voltages = _filter_by_voltage(
         df_converters, min_voltage=min_voltage_dc
     )
@@ -1659,11 +1634,9 @@ if __name__ == "__main__":
     df_lines_cables_relation.loc[:, "cables"] = _clean_cables(
         df_lines_cables_relation["cables"]
     )
-    df_lines_cables_relation = _clean_lines(
-        df_lines_cables_relation, list_voltages)
+    df_lines_cables_relation = _clean_lines(df_lines_cables_relation, list_voltages)
     df_lines_cables_relation.drop(
-        columns=["voltage_original", "cleaned",
-                 "circuits_original", "split_elements"],
+        columns=["voltage_original", "cleaned", "circuits_original", "split_elements"],
         inplace=True,
     )
 
@@ -1735,8 +1708,7 @@ if __name__ == "__main__":
     # Dropping
     len_before = len(df_lines)
     connection_type = (
-        df_lines[df_lines["id"].isin(ways_to_replace)].set_index("id")[
-            "power"].copy()
+        df_lines[df_lines["id"].isin(ways_to_replace)].set_index("id")["power"].copy()
     )
     df_lines = df_lines[~df_lines["id"].isin(ways_to_replace)]
     len_after = len(df_lines)
@@ -1746,8 +1718,7 @@ if __name__ == "__main__":
 
     # Cleaning process
     df_lines.loc[:, "voltage"] = _clean_voltage(df_lines["voltage"])
-    df_lines, list_voltages = _filter_by_voltage(
-        df_lines, min_voltage=min_voltage_ac)
+    df_lines, list_voltages = _filter_by_voltage(df_lines, min_voltage=min_voltage_ac)
     df_lines.loc[:, "circuits"] = _clean_circuits(df_lines["circuits"])
     df_lines.loc[:, "cables"] = _clean_cables(df_lines["cables"])
     df_lines.loc[:, "frequency"] = _clean_frequency(df_lines["frequency"])
@@ -1764,8 +1735,7 @@ if __name__ == "__main__":
     )
     df_lines = _create_lines_geometry(df_lines)
     df_lines = _finalise_lines(df_lines)
-    df_lines["contains"] = df_lines["line_id"].apply(
-        lambda x: [x.split("-")[0]])
+    df_lines["contains"] = df_lines["line_id"].apply(lambda x: [x.split("-")[0]])
 
     # Merge
     # Map element in list of column ways to connection_type
@@ -1785,8 +1755,7 @@ if __name__ == "__main__":
 
     # Create GeoDataFrame
     gdf_lines = gpd.GeoDataFrame(df_lines, geometry="geometry", crs=crs)
-    gdf_lines = _remove_lines_within_substations(
-        gdf_lines, gdf_substations_polygon)
+    gdf_lines = _remove_lines_within_substations(gdf_lines, gdf_substations_polygon)
 
     gdf_lines = _extend_lines_to_substations(
         gdf_lines, gdf_substations_polygon, tol=BUS_TOL / 2
@@ -1808,8 +1777,7 @@ if __name__ == "__main__":
 
     df_links = _drop_duplicate_lines(df_links)
     df_links.loc[:, "voltage"] = _clean_voltage(df_links["voltage"])
-    df_links, list_voltages = _filter_by_voltage(
-        df_links, min_voltage=min_voltage_dc)
+    df_links, list_voltages = _filter_by_voltage(df_links, min_voltage=min_voltage_dc)
     # Keep only highest voltage of split string
     df_links.loc[:, "voltage"] = df_links["voltage"].apply(
         lambda x: str(max(map(int, x.split(";"))))

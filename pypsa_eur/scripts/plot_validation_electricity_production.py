@@ -46,14 +46,12 @@ if __name__ == "__main__":
         header=[0, 1],
         parse_dates=True,
     )
-    subset_technologies = ["Geothermal", "Nuclear",
-                           "Biomass", "Lignite", "Oil", "Coal"]
+    subset_technologies = ["Geothermal", "Nuclear", "Biomass", "Lignite", "Oil", "Coal"]
     lowercase_technologies = [
         technology.lower() if technology in subset_technologies else technology
         for technology in historic.columns.levels[1]
     ]
-    historic.columns = historic.columns.set_levels(
-        lowercase_technologies, level=1)
+    historic.columns = historic.columns.set_levels(lowercase_technologies, level=1)
 
     colors = n.carriers.set_index("nice_name").color.where(
         lambda s: s != "", "lightgrey"
@@ -64,8 +62,7 @@ if __name__ == "__main__":
     colors["Other"] = "lightgray"
 
     if len(historic.index) > len(n.snapshots):
-        historic = historic.resample(
-            n.snapshots.inferred_freq).mean().loc[n.snapshots]
+        historic = historic.resample(n.snapshots.inferred_freq).mean().loc[n.snapshots]
 
     optimized = n.statistics.dispatch(
         groupby=get_bus_and_carrier, aggregate_time=False
@@ -75,16 +72,14 @@ if __name__ == "__main__":
     optimized = optimized.rename(columns=carrier_groups, level=1)
     optimized = optimized.T.groupby(level=[0, 1]).sum().T
 
-    data = pd.concat([historic, optimized], keys=[
-                     "Historic", "Optimized"], axis=1)
+    data = pd.concat([historic, optimized], keys=["Historic", "Optimized"], axis=1)
     data.columns.names = ["Kind", "Country", "Carrier"]
     data = data.mul(n.snapshot_weightings.generators, axis=0)
 
     # total production per carrier
     fig, ax = plt.subplots(figsize=(6, 6))
 
-    df = data.groupby(level=["Kind", "Carrier"],
-                      axis=1).sum().sum().unstack().T
+    df = data.groupby(level=["Kind", "Carrier"], axis=1).sum().sum().unstack().T
     df = df / 1e6  # TWh
     df.plot.barh(ax=ax, xlabel="Electricity Production [TWh]", ylabel="")
     ax.grid(axis="y")
@@ -122,8 +117,7 @@ if __name__ == "__main__":
     df = df / 1e3
 
     order = (
-        (df["Historic"].diff().abs().sum() /
-         df["Historic"].sum()).sort_values().index
+        (df["Historic"].diff().abs().sum() / df["Historic"].sum()).sort_values().index
     )
     c = colors[order]
     optimized = df["Optimized"].reindex(order, axis=1, level=1)

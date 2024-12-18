@@ -33,8 +33,7 @@ if __name__ == "__main__":
     if "snakemake" not in globals():
         from pypsa_eur.scripts._helpers import mock_snakemake
 
-        snakemake = mock_snakemake(
-            "retrieve_heat_source_utilisation_potentials")
+        snakemake = mock_snakemake("retrieve_heat_source_utilisation_potentials")
         rootpath = ".."
     else:
         rootpath = "."
@@ -53,8 +52,7 @@ if __name__ == "__main__":
     logger.info(
         f"Downloading heat source utilisation potential data for {heat_source} from '{url}'."
     )
-    disable_progress = snakemake.config["run"].get(
-        "disable_progressbar", False)
+    disable_progress = snakemake.config["run"].get("disable_progressbar", False)
     progress_retrieve(url, filepath, disable=disable_progress)
 
     logger.info(f"Data available at at {filepath}")

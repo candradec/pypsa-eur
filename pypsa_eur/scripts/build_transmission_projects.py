@@ -82,8 +82,7 @@ def add_new_buses(n, new_ports):
     )
     new_buses = n.buses.loc[added_buses].copy().dropna(axis=1, how="all")
     new_ports.loc[to_add.index, "neighbor"] = added_buses
-    new_ports["neighbor"] = new_ports.groupby(
-        ["x", "y"])["neighbor"].transform("first")
+    new_ports["neighbor"] = new_ports.groupby(["x", "y"])["neighbor"].transform("first")
     return new_ports, new_buses
 
 
@@ -150,8 +149,7 @@ def connect_new_lines(
                 + str(lines_port[~lines_port.match_distance].index.to_list())
                 + "\n Lines will be ignored."
             )
-            lines.drop(
-                lines_port[~lines_port.match_distance].index, inplace=True)
+            lines.drop(lines_port[~lines_port.match_distance].index, inplace=True)
             lines_port = lines_port[lines_port.match_distance]
 
         lines.loc[lines_port.index, f"bus{port}"] = lines_port["neighbor"]
@@ -233,22 +231,19 @@ def find_closest_lines(lines, new_lines, distance_upper_bound=0.1, type="new"):
     querylines = pd.concat(
         [
             new_lines["geometry"].apply(get_branch_coords_from_geometry),
-            new_lines["geometry"].apply(
-                get_branch_coords_from_geometry, reversed=True),
+            new_lines["geometry"].apply(get_branch_coords_from_geometry, reversed=True),
         ]
     )
     treelines = np.vstack(treelines)
     querylines = np.vstack(querylines)
     tree = spatial.KDTree(treelines)
-    dist, ind = tree.query(
-        querylines, distance_upper_bound=distance_upper_bound)
+    dist, ind = tree.query(querylines, distance_upper_bound=distance_upper_bound)
     found_b = ind < len(lines)
     # since the new lines are checked in both directions, we need to find the correct index of the new line
     found_i = np.arange(len(querylines))[found_b] % len(new_lines)
     # create a DataFrame with the distances, new line and its closest existing line
     line_map = pd.DataFrame(
-        dict(D=dist[found_b],
-             existing_line=lines.index[ind[found_b] % len(lines)]),
+        dict(D=dist[found_b], existing_line=lines.index[ind[found_b] % len(lines)]),
         index=new_lines.index[found_i].rename("new_lines"),
     )
     if type == "new":
@@ -316,11 +311,9 @@ def get_upgraded_lines(branch_component, n, upgraded_lines, line_map):
     # merge upgraded lines with existing lines
     lines_to_add.update(upgraded_lines)
     # add column which was added in upgraded lines
-    lines_to_add = pd.concat(
-        [lines_to_add, upgraded_lines[new_columns]], axis=1)
+    lines_to_add = pd.concat([lines_to_add, upgraded_lines[new_columns]], axis=1)
     # only consider columns of original upgraded lines and bus0 and bus1
-    lines_to_add = lines_to_add.loc[:, [
-        "bus0", "bus1", *upgraded_lines.columns]]
+    lines_to_add = lines_to_add.loc[:, ["bus0", "bus1", *upgraded_lines.columns]]
     # set capacity of upgraded lines to capacity of existing lines
     lines_to_add[nominal_attrs[branch_component]] = n.df(branch_component).loc[
         line_map, nominal_attrs[branch_component]
@@ -365,8 +358,7 @@ def remove_projects_outside_countries(lines, europe_shape):
     if not is_within_covered_countries.all():
         logger.warning(
             "Project lines outside of the covered area (skipping): "
-            + ", ".join(str(i)
-                        for i in lines.loc[~is_within_covered_countries].index)
+            + ", ".join(str(i) for i in lines.loc[~is_within_covered_countries].index)
         )
 
     lines = lines.loc[is_within_covered_countries]
@@ -410,8 +402,7 @@ def add_projects(
 ):
     lines_dict = get_project_files(path, skip=skip)
     for key, lines in lines_dict.items():
-        logging.info(
-            f"Processing {key.replace('_', ' ')} projects from {plan}.")
+        logging.info(f"Processing {key.replace('_', ' ')} projects from {plan}.")
         lines = remove_projects_outside_countries(lines, europe_shape)
         if isinstance(status, dict):
             status = status[plan]
@@ -453,8 +444,7 @@ def add_projects(
             upgraded_lines = lines.loc[line_map.index]
             lines_to_adjust = adjust_decommissioning(upgraded_lines, line_map)
             adjust_lines_df = pd.concat([adjust_lines_df, lines_to_adjust])
-            upgraded_lines = get_upgraded_lines(
-                "Line", n, upgraded_lines, line_map)
+            upgraded_lines = get_upgraded_lines("Line", n, upgraded_lines, line_map)
             new_lines_df = pd.concat([new_lines_df, upgraded_lines])
         elif key == "upgraded_links":
             line_map = find_closest_lines(
@@ -466,8 +456,7 @@ def add_projects(
             upgraded_links = lines.loc[line_map.index]
             links_to_adjust = adjust_decommissioning(upgraded_links, line_map)
             adjust_links_df = pd.concat([adjust_links_df, links_to_adjust])
-            upgraded_links = get_upgraded_lines(
-                "Link", n, upgraded_links, line_map)
+            upgraded_links = get_upgraded_lines("Link", n, upgraded_links, line_map)
             new_links_df = pd.concat([new_links_df, upgraded_links])
             set_underwater_fraction(new_links_df, offshore_shapes)
         else:
@@ -479,8 +468,7 @@ def add_projects(
 def fill_length_from_geometry(line, line_factor=1.2):
     if not pd.isna(line.length):
         return line.length
-    length = gpd.GeoSeries(line["geometry"], crs=4326).to_crs(
-        3035).length.values[0]
+    length = gpd.GeoSeries(line["geometry"], crs=4326).to_crs(3035).length.values[0]
     length = length / 1000 * line_factor
     return round(length, 1)
 
@@ -504,8 +492,7 @@ if __name__ == "__main__":
     adjust_links_df = pd.DataFrame()
     new_buses_df = pd.DataFrame()
 
-    europe_shape = gpd.read_file(
-        snakemake.input.europe_shape).loc[0, "geometry"]
+    europe_shape = gpd.read_file(snakemake.input.europe_shape).loc[0, "geometry"]
     offshore_shapes = gpd.read_file(snakemake.input.offshore_shapes).rename(
         {"name": "country"}, axis=1
     )
@@ -569,8 +556,7 @@ if __name__ == "__main__":
         # Whether to keep existing link capacity or set to zero
         not_upgraded = ~new_links_df.index.str.contains("upgraded")
         if transmission_projects["new_link_capacity"] == "keep":
-            new_links_df.loc[not_upgraded,
-                             "p_nom"] = new_links_df["p_nom"].fillna(0)
+            new_links_df.loc[not_upgraded, "p_nom"] = new_links_df["p_nom"].fillna(0)
         elif transmission_projects["new_link_capacity"] == "zero":
             new_links_df.loc[not_upgraded, "p_nom"] = 0
     # export csv files for new buses, lines, links and adjusted lines and links

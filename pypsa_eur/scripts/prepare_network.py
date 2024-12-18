@@ -88,17 +88,14 @@ def modify_attribute(n, adjustments, investment_year, modification="factor"):
                 continue
             for parameter in change_dict[c][carrier].keys():
                 if parameter not in n.df(c).columns:
-                    logger.warning(
-                        f"Attribute {parameter} needs to be in {c} columns.")
+                    logger.warning(f"Attribute {parameter} needs to be in {c} columns.")
                     continue
                 if investment_year:
-                    factor = get(change_dict[c][carrier]
-                                 [parameter], investment_year)
+                    factor = get(change_dict[c][carrier][parameter], investment_year)
                 else:
                     factor = change_dict[c][carrier][parameter]
                 if modification == "factor":
-                    logger.info(
-                        f"Modify {parameter} of {carrier} by factor {factor} ")
+                    logger.info(f"Modify {parameter} of {carrier} by factor {factor} ")
                     n.df(c).loc[ind_i, parameter] *= factor
                 elif modification == "absolute":
                     logger.info(f"Set {parameter} of {carrier} to {factor} ")
@@ -149,31 +146,25 @@ def add_emission_prices(n, emission_prices={"co2": 0.0}, exclude_co2=False):
     gen_ep = n.generators.carrier.map(ep) / n.generators.efficiency
     n.generators["marginal_cost"] += gen_ep
     n.generators_t["marginal_cost"] += gen_ep[n.generators_t["marginal_cost"].columns]
-    su_ep = n.storage_units.carrier.map(
-        ep) / n.storage_units.efficiency_dispatch
+    su_ep = n.storage_units.carrier.map(ep) / n.storage_units.efficiency_dispatch
     n.storage_units["marginal_cost"] += su_ep
 
 
 def add_dynamic_emission_prices(n):
-    co2_price = pd.read_csv(snakemake.input.co2_price,
-                            index_col=0, parse_dates=True)
+    co2_price = pd.read_csv(snakemake.input.co2_price, index_col=0, parse_dates=True)
     co2_price = co2_price[~co2_price.index.duplicated()]
     co2_price = co2_price.reindex(n.snapshots).ffill().bfill()
 
     emissions = (
-        n.generators.carrier.map(
-            n.carriers.co2_emissions) / n.generators.efficiency
+        n.generators.carrier.map(n.carriers.co2_emissions) / n.generators.efficiency
     )
-    co2_cost = expand_series(emissions, n.snapshots).T.mul(
-        co2_price.iloc[:, 0], axis=0)
+    co2_cost = expand_series(emissions, n.snapshots).T.mul(co2_price.iloc[:, 0], axis=0)
 
     static = n.generators.marginal_cost
     dynamic = n.get_switchable_as_dense("Generator", "marginal_cost")
 
-    marginal_cost = dynamic + \
-        co2_cost.reindex(columns=dynamic.columns, fill_value=0)
-    n.generators_t.marginal_cost = marginal_cost.loc[:, marginal_cost.ne(
-        static).any()]
+    marginal_cost = dynamic + co2_cost.reindex(columns=dynamic.columns, fill_value=0)
+    n.generators_t.marginal_cost = marginal_cost.loc[:, marginal_cost.ne(static).any()]
 
 
 def set_line_s_max_pu(n, s_max_pu=0.7):
@@ -275,8 +266,7 @@ def apply_time_segmentation(n, segments, solver_name="cbc"):
 
     weightings = segmented.index.get_level_values("Segment Duration")
     offsets = np.insert(np.cumsum(weightings[:-1]), 0, 0)
-    snapshots = [n.snapshots[0] +
-                 pd.Timedelta(f"{offset}h") for offset in offsets]
+    snapshots = [n.snapshots[0] + pd.Timedelta(f"{offset}h") for offset in offsets]
 
     n.set_snapshots(pd.DatetimeIndex(snapshots, name="name"))
     n.snapshot_weightings = pd.Series(
@@ -294,12 +284,10 @@ def apply_time_segmentation(n, segments, solver_name="cbc"):
 def enforce_autarky(n, only_crossborder=False):
     if only_crossborder:
         lines_rm = n.lines.loc[
-            n.lines.bus0.map(n.buses.country) != n.lines.bus1.map(
-                n.buses.country)
+            n.lines.bus0.map(n.buses.country) != n.lines.bus1.map(n.buses.country)
         ].index
         links_rm = n.links.loc[
-            n.links.bus0.map(n.buses.country) != n.links.bus1.map(
-                n.buses.country)
+            n.links.bus0.map(n.buses.country) != n.links.bus1.map(n.buses.country)
         ].index
     else:
         lines_rm = n.lines.index
@@ -322,8 +310,7 @@ def set_line_nom_max(
     if np.isfinite(p_nom_max_ext) and p_nom_max_ext > 0:
         logger.info(f"Limiting link extensions to {p_nom_max_ext} MW")
         hvdc = n.links.index[n.links.carrier == "DC"]
-        n.links.loc[hvdc, "p_nom_max"] = n.links.loc[hvdc,
-                                                     "p_nom"] + p_nom_max_ext
+        n.links.loc[hvdc, "p_nom_max"] = n.links.loc[hvdc, "p_nom"] + p_nom_max_ext
 
     n.lines["s_nom_max"] = n.lines.s_nom_max.clip(upper=s_nom_max_set)
     n.links["p_nom_max"] = n.links.p_nom_max.clip(upper=p_nom_max_set)
@@ -401,6 +388,5 @@ if __name__ == "__main__":
         only_crossborder = snakemake.params.autarky["by_country"]
         enforce_autarky(n, only_crossborder=only_crossborder)
 
-    n.meta = dict(snakemake.config, **
-                  dict(wildcards=dict(snakemake.wildcards)))
+    n.meta = dict(snakemake.config, **dict(wildcards=dict(snakemake.wildcards)))
     n.export_to_netcdf(snakemake.output[0])

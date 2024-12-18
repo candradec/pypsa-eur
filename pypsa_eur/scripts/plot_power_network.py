@@ -117,8 +117,7 @@ def plot_map(
     costs = costs.stack()  # .sort_index()
 
     # hack because impossible to drop buses...
-    eu_location = snakemake.params.plotting.get(
-        "eu_node_location", dict(x=-5.5, y=46))
+    eu_location = snakemake.params.plotting.get("eu_node_location", dict(x=-5.5, y=46))
     n.buses.loc["EU gas", "x"] = eu_location["x"]
     n.buses.loc["EU gas", "y"] = eu_location["y"]
 
@@ -270,8 +269,7 @@ if __name__ == "__main__":
     map_opts = snakemake.params.plotting["map"]
 
     if map_opts["boundaries"] is None:
-        map_opts["boundaries"] = regions.total_bounds[[
-            0, 2, 1, 3]] + [-1, 1, -1, 1]
+        map_opts["boundaries"] = regions.total_bounds[[0, 2, 1, 3]] + [-1, 1, -1, 1]
 
     proj = load_projection(snakemake.params.plotting)
 

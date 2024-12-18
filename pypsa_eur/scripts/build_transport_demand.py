@@ -46,8 +46,7 @@ def build_transport_demand(traffic_fn, airtemp_fn, nodes, nodal_transport_data):
     Returns transport demand per bus in unit km driven [100 km].
     """
     # averaged weekly counts from the year 2010-2015
-    traffic = pd.read_csv(traffic_fn, skiprows=2, usecols=[
-                          "count"]).squeeze("columns")
+    traffic = pd.read_csv(traffic_fn, skiprows=2, usecols=["count"]).squeeze("columns")
 
     # create annual profile take account time zone + summer time
     transport_shape = generate_periodic_profiles(
@@ -70,8 +69,7 @@ def build_transport_demand(traffic_fn, airtemp_fn, nodes, nodal_transport_data):
     )
 
     # divide out the heating/cooling demand from ICE totals
-    ice_correction = (transport_shape * (1 + dd_ICE)
-                      ).sum() / transport_shape.sum()
+    ice_correction = (transport_shape * (1 + dd_ICE)).sum() / transport_shape.sum()
 
     # unit TWh
     energy_totals_transport = (

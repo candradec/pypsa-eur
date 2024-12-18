@@ -28,8 +28,7 @@ if __name__ == "__main__":
     configure_logging(snakemake)
     set_scenario_config(snakemake)
 
-    disable_progress = snakemake.config["run"].get(
-        "disable_progressbar", False)
+    disable_progress = snakemake.config["run"].get("disable_progressbar", False)
 
     url_eurostat_household = "https://ec.europa.eu/eurostat/databrowser-backend/api/extraction/1.0/LIVE/false/sdmx/csv/nrg_d_hhq__custom_11480365?startPeriod=2013&endPeriod=2022&i&compressed=true"
     tarball_fn = Path(f"{rootpath}/data/eurostat/eurostat_household.gz")
@@ -40,11 +39,9 @@ if __name__ == "__main__":
     logger.info(
         f"Downloading Eurostats' disaggregated household energy balances data from '{url_eurostat_household}'."
     )
-    progress_retrieve(url_eurostat_household, tarball_fn,
-                      disable=disable_progress)
+    progress_retrieve(url_eurostat_household, tarball_fn, disable=disable_progress)
 
-    logger.info(
-        "Extracting Eurostat's disaggregated household energy balance data.")
+    logger.info("Extracting Eurostat's disaggregated household energy balance data.")
     with gzip.open(tarball_fn, "rb") as f_in, open(to_fn, "wb") as f_out:
         shutil.copyfileobj(f_in, f_out)
 

@@ -262,14 +262,11 @@ if __name__ == "__main__":
     network.lines.num_parallel = network.lines.num_parallel.astype(int)
     network.links.voltage = network.links.voltage.astype(int)
     network.links.p_nom = network.links.p_nom.astype(int)
-    network.transformers.voltage_bus0 = network.transformers.voltage_bus0.astype(
-        int)
-    network.transformers.voltage_bus1 = network.transformers.voltage_bus1.astype(
-        int)
+    network.transformers.voltage_bus0 = network.transformers.voltage_bus0.astype(int)
+    network.transformers.voltage_bus1 = network.transformers.voltage_bus1.astype(int)
     network.transformers.s_nom = network.transformers.s_nom.astype(int)
 
-    network.buses["dc"] = network.buses.pop(
-        "carrier").map({"DC": "t", "AC": "f"})
+    network.buses["dc"] = network.buses.pop("carrier").map({"DC": "t", "AC": "f"})
     network.lines.length = network.lines.length * 1e3
     network.links.length = network.links.length * 1e3
 
@@ -280,8 +277,7 @@ if __name__ == "__main__":
     network.links.sort_index(inplace=True)
 
     # Export to clean csv for release
-    logger.info(
-        f"Exporting {len(network.buses)} buses to %s", snakemake.output.buses)
+    logger.info(f"Exporting {len(network.buses)} buses to %s", snakemake.output.buses)
     export_clean_csv(network.buses, BUSES_COLUMNS, snakemake.output.buses)
 
     logger.info(
@@ -292,8 +288,7 @@ if __name__ == "__main__":
         network.transformers, TRANSFORMERS_COLUMNS, snakemake.output.transformers
     )
 
-    logger.info(
-        f"Exporting {len(network.lines)} lines to %s", snakemake.output.lines)
+    logger.info(f"Exporting {len(network.lines)} lines to %s", snakemake.output.lines)
     export_clean_csv(network.lines, LINES_COLUMNS, snakemake.output.lines)
 
     # Boolean that specifies if link element is a converter
@@ -330,16 +325,14 @@ if __name__ == "__main__":
     stations_polygon = stations_polygon.drop_duplicates(subset=["station_id"])
     stations_polygon = stations_polygon[["station_id", "geometry"]]
 
-    buses_polygon = gpd.sjoin(buses_polygon, buses,
-                              how="left", predicate="contains")
+    buses_polygon = gpd.sjoin(buses_polygon, buses, how="left", predicate="contains")
     buses_polygon = buses_polygon[buses_polygon.index_right.notnull()]
     buses_polygon = buses_polygon.drop_duplicates(subset=["bus_id", "dc_left"])
     buses_polygon.rename(columns={"dc_left": "dc"}, inplace=True)
     buses_polygon = buses_polygon[["bus_id", "dc", "geometry"]]
 
     map = None
-    map = folium.Map(tiles="CartoDB positron",
-                     zoom_start=5, location=[53.5, 10])
+    map = folium.Map(tiles="CartoDB positron", zoom_start=5, location=[53.5, 10])
     map = stations_polygon.loc[
         (
             stations_polygon.station_id.str.startswith("way")
