@@ -93,7 +93,7 @@ rule purge:
         if do_purge == "y":
             rmtree("resources/", ignore_errors=True)
             rmtree("results/", ignore_errors=True)
-            rmtree("pypsa-eur/doc/_build", ignore_errors=True)
+            rmtree("pypsa_eur/doc/_build", ignore_errors=True)
             print("Purging generated resources, results and docs. Downloads are kept.")
         else:
             raise Exception(f"Input {do_purge}. Aborting purge.")

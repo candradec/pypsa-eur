@@ -55,7 +55,7 @@ hundred nodes to remove these local inconsistencies. See the discussion in
 Section 3.4 "Model validation" of the paper.
 
 
-![PyPSA-Eur Grid Model](pypsa-eur/doc/img/elec.png)
+![PyPSA-Eur Grid Model](pypsa_eur/doc/img/elec.png)
 
 The dataset consists of:
 
@@ -80,7 +80,7 @@ all greenhouse gas emitters except waste management and land use.
 This diagram gives an overview of the sectors and the links between
 them:
 
-![sector diagram](pypsa-eur/doc/img/multisector_figure.png)
+![sector diagram](pypsa_eur/doc/img/multisector_figure.png)
 
 Each of these sectors is built up on the transmission network nodes
 from [PyPSA-Eur](https://github.com/PyPSA/pypsa-eur):
@@ -103,6 +103,6 @@ We strongly welcome anyone interested in contributing to this project. If you ha
 # Licence
 
 The code in PyPSA-Eur is released as free software under the
-[MIT License](https://opensource.org/licenses/MIT), see [`doc/licenses.rst`](pypsa-eur/doc/licenses.rst).
+[MIT License](https://opensource.org/licenses/MIT), see [`doc/licenses.rst`](pypsa_eur/doc/licenses.rst).
 However, different licenses and terms of use may apply to the various
-input data, see [`doc/data_sources.rst`](pypsa-eur/doc/data_sources.rst).
+input data, see [`doc/data_sources.rst`](pypsa_eur/doc/data_sources.rst).
