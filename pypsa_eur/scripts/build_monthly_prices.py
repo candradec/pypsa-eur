@@ -43,7 +43,7 @@ Data was accessed at 16.5.2023
 import logging
 
 import pandas as pd
-from _helpers import configure_logging, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +106,7 @@ def get_co2_price():
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("build_monthly_prices")
 

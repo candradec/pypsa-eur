@@ -17,7 +17,7 @@ import pytest
 
 sys.path.append("./scripts")
 
-from build_powerplants import (
+from pypsa_eur.scripts.build_powerplants import (
     add_custom_powerplants,
     replace_natural_gas_fueltype,
     replace_natural_gas_technology,

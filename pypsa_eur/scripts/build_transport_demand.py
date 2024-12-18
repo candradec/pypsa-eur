@@ -13,7 +13,7 @@ import logging
 import numpy as np
 import pandas as pd
 import xarray as xr
-from _helpers import (
+from pypsa_eur.scripts._helpers import (
     configure_logging,
     generate_periodic_profiles,
     get_snapshots,
@@ -165,7 +165,7 @@ def bev_dsm_profile(snapshots, nodes, options):
 # %%
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("build_transport_demand", clusters=128)
     configure_logging(snakemake)

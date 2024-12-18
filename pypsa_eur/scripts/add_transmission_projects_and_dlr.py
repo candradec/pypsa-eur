@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 import pypsa
 import xarray as xr
-from _helpers import configure_logging, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ def attach_line_rating(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("add_transmission_projects_and_dlr")
     configure_logging(snakemake)

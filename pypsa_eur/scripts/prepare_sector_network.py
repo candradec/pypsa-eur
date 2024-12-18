@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 import pypsa
 import xarray as xr
-from _helpers import (
+from pypsa_eur.scripts._helpers import (
     configure_logging,
     get,
     set_scenario_config,
@@ -4599,7 +4599,7 @@ def add_enhanced_geothermal(n, egs_potentials, egs_overlap, costs):
 # %%
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "prepare_sector_network",

@@ -16,7 +16,7 @@ import pandas as pd
 import powerplantmatching as pm
 import pypsa
 import xarray as xr
-from _helpers import (
+from pypsa_eur.scripts._helpers import (
     configure_logging,
     set_scenario_config,
     update_config_from_wildcards,
@@ -642,7 +642,7 @@ def set_defaults(n):
 # %%
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "add_existing_baseyear",

@@ -59,7 +59,7 @@ import geopandas as gpd
 import numpy as np
 import pypsa
 import xarray as xr
-from _helpers import configure_logging, get_snapshots, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, get_snapshots, set_scenario_config
 from dask.distributed import Client
 from shapely.geometry import LineString as Line
 from shapely.geometry import Point
@@ -155,7 +155,7 @@ def calculate_line_rating(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("build_line_rating")
     configure_logging(snakemake)

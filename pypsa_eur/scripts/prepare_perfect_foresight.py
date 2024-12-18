@@ -12,7 +12,7 @@ from typing import List
 import numpy as np
 import pandas as pd
 import pypsa
-from _helpers import (
+from pypsa_eur.scripts._helpers import (
     configure_logging,
     set_scenario_config,
     update_config_from_wildcards,
@@ -522,7 +522,7 @@ def update_heat_pump_efficiency(n: pypsa.Network, years: List[int]):
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "prepare_perfect_foresight",

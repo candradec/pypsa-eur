@@ -86,7 +86,7 @@ import shapely
 import shapely.prepared
 import shapely.wkt
 import yaml
-from _helpers import REGION_COLS, configure_logging, get_snapshots, set_scenario_config
+from pypsa_eur.scripts._helpers import REGION_COLS, configure_logging, get_snapshots, set_scenario_config
 from packaging.version import Version, parse
 from scipy.sparse import csgraph
 from scipy.spatial import KDTree
@@ -977,7 +977,7 @@ def append_bus_shapes(n, shapes, type):
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("base_network")
     configure_logging(snakemake)

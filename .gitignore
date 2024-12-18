@@ -31,11 +31,11 @@ pypsa_eur/doc/_build
 /scripts/create_scenarios.py
 /config/create_scenarios.py
 
-pypsa_eur/config/config.yaml
-pypsa_eur/config/scenarios.yaml
+config/config.yaml
+config/scenarios.yaml
 
 config.yaml
-pypsa_eur/config/config.yaml
+config/config.yaml
 
 dconf
 /data/links_p_nom.csv

@@ -39,7 +39,7 @@ Outputs
 
 import pandas as pd
 import xarray as xr
-from _helpers import set_scenario_config
+from pypsa_eur.scripts._helpers import set_scenario_config
 from CentralHeatingCopApproximator import CentralHeatingCopApproximator
 from DecentralHeatingCopApproximator import DecentralHeatingCopApproximator
 
@@ -89,7 +89,7 @@ def get_cop(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "build_cop_profiles",

@@ -62,7 +62,7 @@ import logging
 import numpy as np
 import pandas as pd
 import pypsa
-from _helpers import (
+from pypsa_eur.scripts._helpers import (
     configure_logging,
     get,
     set_scenario_config,
@@ -321,7 +321,7 @@ def set_line_nom_max(
 # %%
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "prepare_network",

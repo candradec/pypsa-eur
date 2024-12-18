@@ -104,7 +104,7 @@ import numpy as np
 import pandas as pd
 import pypsa
 import xarray as xr
-from _helpers import configure_logging, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from base_network import append_bus_shapes
 from packaging.version import Version, parse
 from pypsa.clustering.spatial import (
@@ -340,7 +340,7 @@ def cluster_regions(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("cluster_network", clusters=60)
     configure_logging(snakemake)

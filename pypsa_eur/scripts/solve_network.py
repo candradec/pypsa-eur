@@ -39,7 +39,7 @@ import pypsa
 import xarray as xr
 import yaml
 from _benchmark import memory_logger
-from _helpers import (
+from pypsa_eur.scripts._helpers import (
     configure_logging,
     set_scenario_config,
     update_config_from_wildcards,
@@ -1050,7 +1050,7 @@ def solve_network(n, config, params, solving, **kwargs):
 # %%
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "solve_sector_network_perfect",

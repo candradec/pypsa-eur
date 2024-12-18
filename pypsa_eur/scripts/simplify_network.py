@@ -75,7 +75,7 @@ import numpy as np
 import pandas as pd
 import pypsa
 import scipy as sp
-from _helpers import configure_logging, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from base_network import append_bus_shapes
 from cluster_network import cluster_regions
 from pypsa.clustering.spatial import busmap_by_stubs, get_clustering_from_busmap
@@ -414,7 +414,7 @@ def remove_converters(n: pypsa.Network) -> pypsa.Network:
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("simplify_network")
     configure_logging(snakemake)

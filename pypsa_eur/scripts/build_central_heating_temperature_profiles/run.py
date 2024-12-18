@@ -41,7 +41,7 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 import xarray as xr
-from _helpers import set_scenario_config
+from pypsa_eur.scripts._helpers import set_scenario_config
 from central_heating_temperature_approximator import (
     CentralHeatingTemperatureApproximator,
 )
@@ -187,7 +187,7 @@ def scale_temperature_to_investment_year(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "build_cop_profiles",

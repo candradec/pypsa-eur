@@ -34,11 +34,11 @@ from itertools import product
 
 import pandas as pd
 import xarray as xr
-from _helpers import generate_periodic_profiles, get_snapshots, set_scenario_config
+from pypsa_eur.scripts._helpers import generate_periodic_profiles, get_snapshots, set_scenario_config
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "build_hourly_heat_demand",

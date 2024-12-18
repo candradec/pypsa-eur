@@ -10,7 +10,7 @@ import logging
 
 import atlite
 import geopandas as gpd
-from _helpers import get_snapshots, set_scenario_config
+from pypsa_eur.scripts._helpers import get_snapshots, set_scenario_config
 from atlite.aggregate import aggregate_matrix
 from dask.distributed import Client
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("build_hac_features")
     set_scenario_config(snakemake)

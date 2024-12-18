@@ -91,7 +91,7 @@ import numpy as np
 import pandas as pd
 import powerplantmatching as pm
 import pypsa
-from _helpers import configure_logging, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from powerplantmatching.export import map_country_bus
 
 logger = logging.getLogger(__name__)
@@ -165,7 +165,7 @@ def replace_natural_gas_fueltype(df):
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("build_powerplants")
     configure_logging(snakemake)

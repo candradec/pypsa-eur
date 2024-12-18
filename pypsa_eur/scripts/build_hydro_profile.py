@@ -65,7 +65,7 @@ import atlite
 import country_converter as coco
 import geopandas as gpd
 import pandas as pd
-from _helpers import configure_logging, get_snapshots, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, get_snapshots, set_scenario_config
 from numpy.polynomial import Polynomial
 
 cc = coco.CountryConverter()
@@ -170,7 +170,7 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("build_hydro_profile")
     configure_logging(snakemake)

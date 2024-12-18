@@ -28,7 +28,7 @@ Outputs
 from typing import List
 
 import xarray as xr
-from _helpers import set_scenario_config
+from pypsa_eur.scripts._helpers import set_scenario_config
 
 
 def get_source_temperature(heat_source_key: str):
@@ -86,7 +86,7 @@ def get_profile(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "build_cop_profiles",

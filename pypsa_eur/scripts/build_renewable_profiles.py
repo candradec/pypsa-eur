@@ -124,7 +124,7 @@ import time
 import atlite
 import geopandas as gpd
 import xarray as xr
-from _helpers import configure_logging, get_snapshots, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, get_snapshots, set_scenario_config
 from build_shapes import _simplify_polys
 from dask.distributed import Client
 
@@ -133,7 +133,7 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "build_renewable_profiles", clusters=38, technology="offwind-ac"

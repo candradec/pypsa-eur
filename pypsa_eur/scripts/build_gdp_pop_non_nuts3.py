@@ -18,7 +18,7 @@ import pandas as pd
 import pypsa
 import rasterio
 import xarray as xr
-from _helpers import configure_logging, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from rasterio.mask import mask
 from shapely.geometry import box
 
@@ -121,7 +121,7 @@ def calc_gdp_pop(country, regions, gdp_non_nuts3, pop_non_nuts3):
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "build_gdp_pop_non_nuts3", configfiles=["config/config.osm-raw.yaml"]

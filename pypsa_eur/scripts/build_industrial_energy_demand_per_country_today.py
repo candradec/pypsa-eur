@@ -65,7 +65,7 @@ from functools import partial
 
 import country_converter as coco
 import pandas as pd
-from _helpers import set_scenario_config
+from pypsa_eur.scripts._helpers import set_scenario_config
 from tqdm import tqdm
 
 cc = coco.CountryConverter()
@@ -283,7 +283,7 @@ def add_coke_ovens(demand, fn, year, factor=0.75):
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("build_industrial_energy_demand_per_country_today")
     set_scenario_config(snakemake)

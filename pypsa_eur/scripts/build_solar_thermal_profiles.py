@@ -39,12 +39,12 @@ import atlite
 import geopandas as gpd
 import numpy as np
 import xarray as xr
-from _helpers import get_snapshots, set_scenario_config
+from pypsa_eur.scripts._helpers import get_snapshots, set_scenario_config
 from dask.distributed import Client, LocalCluster
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("build_solar_thermal_profiles", clusters=48)
     set_scenario_config(snakemake)

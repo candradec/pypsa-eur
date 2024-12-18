@@ -11,7 +11,7 @@ import logging
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import pandas as pd
-from _helpers import configure_logging, rename_techs, set_scenario_config
+from pypsa_eur.scripts._helpers import configure_logging, rename_techs, set_scenario_config
 from prepare_sector_network import co2_emissions_year
 
 logger = logging.getLogger(__name__)
@@ -503,7 +503,7 @@ def plot_carbon_budget_distribution(input_eurostat, options):
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake("plot_summary")
 

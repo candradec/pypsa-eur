@@ -29,7 +29,7 @@ Outputs
 """
 
 import geopandas as gpd
-from _helpers import set_scenario_config
+from pypsa_eur.scripts._helpers import set_scenario_config
 
 from scripts.build_heat_source_potentials.onshore_region_data import OnshoreRegionData
 
@@ -57,7 +57,7 @@ def get_unit_conversion_factor(
 if __name__ == "__main__":
 
     if "snakemake" not in globals():
-        from _helpers import mock_snakemake
+        from pypsa_eur.scripts._helpers import mock_snakemake
 
         snakemake = mock_snakemake(
             "build_heat_source_potentials",
