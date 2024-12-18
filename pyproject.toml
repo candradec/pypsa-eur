@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "pypsa-eur"
+version = "0.1.0"
+description = ""
+authors = ["carlos <21239682+candradec@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+snakemake = "*"
+numpy = "*"
+pandas = "*"
+pypsa = "*"
+pytest = "*"
+gurobipy = "*"
+highspy = "*"
+oauthlib = "*"
+ply ="*"
+pyomo = "*"
+requests-oauthlib = "*"
+snakemake-executor-plugin-cluster-generic = "*"
+snakemake-executor-plugin-slurm = "*"
+snakemake-executor-plugin-slurm-jobstep = "*"
+snakemake-storage-plugin-http = "*"
+tsam = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
