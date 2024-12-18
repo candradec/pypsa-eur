@@ -104,16 +104,14 @@ import numpy as np
 import pandas as pd
 import pypsa
 import xarray as xr
-from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from base_network import append_bus_shapes
 from packaging.version import Version, parse
-from pypsa.clustering.spatial import (
-    busmap_by_greedy_modularity,
-    busmap_by_hac,
-    busmap_by_kmeans,
-    get_clustering_from_busmap,
-)
+from pypsa.clustering.spatial import (busmap_by_greedy_modularity,
+                                      busmap_by_hac, busmap_by_kmeans,
+                                      get_clustering_from_busmap)
 from scipy.sparse.csgraph import connected_components
+
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 PD_GE_2_2 = parse(pd.__version__) >= Version("2.2")
 
@@ -134,7 +132,8 @@ def weighting_for_country(df: pd.DataFrame, weights: pd.Series) -> pd.Series:
 def get_feature_data_for_hac(fn: str) -> pd.DataFrame:
     ds = xr.open_dataset(fn)
     feature_data = (
-        pd.concat([ds[var].to_pandas() for var in ds.data_vars], axis=0).fillna(0.0).T
+        pd.concat([ds[var].to_pandas()
+                  for var in ds.data_vars], axis=0).fillna(0.0).T
     )
     feature_data.columns = feature_data.columns.astype(str)
     return feature_data
@@ -159,7 +158,8 @@ def fix_country_assignment_for_hac(n: pypsa.Network) -> None:
             neighbor_bus = n.lines.query(
                 "bus0 == @disconnected_bus or bus1 == @disconnected_bus"
             ).iloc[0][["bus0", "bus1"]]
-            new_country = list(set(n.buses.loc[neighbor_bus].country) - {country})[0]
+            new_country = list(
+                set(n.buses.loc[neighbor_bus].country) - {country})[0]
 
             logger.info(
                 f"overwriting country `{country}` of bus `{disconnected_bus}` "
@@ -206,7 +206,8 @@ def distribute_n_clusters_to_countries(
         ]
         L[remainder] = L.loc[remainder].pipe(normed) * (1 - total_focus)
 
-        logger.warning("Using custom focus weights for determining number of clusters.")
+        logger.warning(
+            "Using custom focus weights for determining number of clusters.")
 
     assert np.isclose(
         L.sum(), 1.0, rtol=1e-3
@@ -331,7 +332,8 @@ def cluster_regions(
     None
     """
     busmap = reduce(lambda x, y: x.map(y), busmaps[1:], busmaps[0])
-    columns = ["name", "country", "geometry"] if with_country else ["name", "geometry"]
+    columns = ["name", "country", "geometry"] if with_country else [
+        "name", "geometry"]
     regions = regions.reindex(columns=columns).set_index("name")
     regions_c = regions.dissolve(busmap)
     regions_c.index.name = "name"
@@ -350,7 +352,8 @@ if __name__ == "__main__":
     solver_name = snakemake.config["solving"]["solver"]["name"]
 
     n = pypsa.Network(snakemake.input.network)
-    buses_prev, lines_prev, links_prev = len(n.buses), len(n.lines), len(n.links)
+    buses_prev, lines_prev, links_prev = len(
+        n.buses), len(n.lines), len(n.links)
 
     load = (
         xr.open_dataarray(snakemake.input.load)
@@ -378,13 +381,15 @@ if __name__ == "__main__":
                 snakemake.input.custom_busmap, index_col=0
             ).squeeze()
             custom_busmap.index = custom_busmap.index.astype(str)
-            logger.info(f"Imported custom busmap from {snakemake.input.custom_busmap}")
+            logger.info(
+                f"Imported custom busmap from {snakemake.input.custom_busmap}")
             busmap = custom_busmap
         else:
             algorithm = params.cluster_network["algorithm"]
             features = None
             if algorithm == "hac":
-                features = get_feature_data_for_hac(snakemake.input.hac_features)
+                features = get_feature_data_for_hac(
+                    snakemake.input.hac_features)
                 fix_country_assignment_for_hac(n)
 
             n.determine_network_topology()
@@ -424,7 +429,8 @@ if __name__ == "__main__":
         clustered_regions.to_file(snakemake.output[which])
         # append_bus_shapes(nc, clustered_regions, type=which.split("_")[1])
 
-    nc.meta = dict(snakemake.config, **dict(wildcards=dict(snakemake.wildcards)))
+    nc.meta = dict(snakemake.config, **
+                   dict(wildcards=dict(snakemake.wildcards)))
     nc.export_to_netcdf(snakemake.output.network)
 
     logger.info(

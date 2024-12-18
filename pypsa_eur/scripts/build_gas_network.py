@@ -12,9 +12,10 @@ import logging
 
 import geopandas as gpd
 import pandas as pd
-from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from pypsa.geo import haversine_pts
 from shapely.geometry import Point
+
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 

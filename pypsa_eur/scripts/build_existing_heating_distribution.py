@@ -41,6 +41,7 @@ References:
 import country_converter as coco
 import numpy as np
 import pandas as pd
+
 from pypsa_eur.scripts._helpers import set_scenario_config
 
 cc = coco.CountryConverter()

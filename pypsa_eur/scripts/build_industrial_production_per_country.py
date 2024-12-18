@@ -68,8 +68,13 @@ from functools import partial
 import country_converter as coco
 import numpy as np
 import pandas as pd
-from pypsa_eur.scripts._helpers import configure_logging, mute_print, set_scenario_config
 from tqdm import tqdm
+
+from pypsa_eur.scripts._helpers import (
+    configure_logging,
+    mute_print,
+    set_scenario_config,
+)
 
 logger = logging.getLogger(__name__)
 cc = coco.CountryConverter()

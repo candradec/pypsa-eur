@@ -65,8 +65,9 @@ from functools import partial
 
 import country_converter as coco
 import pandas as pd
-from pypsa_eur.scripts._helpers import set_scenario_config
 from tqdm import tqdm
+
+from pypsa_eur.scripts._helpers import set_scenario_config
 
 cc = coco.CountryConverter()
 

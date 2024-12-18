@@ -16,6 +16,7 @@ import atlite
 import fiona
 import geopandas as gpd
 import numpy as np
+
 from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
@@ -45,7 +46,8 @@ if __name__ == "__main__":
 
     cutout = atlite.Cutout(snakemake.input.cutout)
     regions = (
-        gpd.read_file(snakemake.input.regions).set_index("name").rename_axis("bus")
+        gpd.read_file(snakemake.input.regions).set_index(
+            "name").rename_axis("bus")
     )
     # Limit to "UA" and "MD" regions
     buses = regions.filter(regex="(UA|MD)", axis=0).index.values
@@ -111,7 +113,8 @@ if __name__ == "__main__":
             layer=layer,
         ).to_crs(3035)
         wdpa_pts = wdpa_pts[wdpa_pts["REP_AREA"] > 1]
-        wdpa_pts["buffer_radius"] = np.sqrt(wdpa_pts["REP_AREA"] / np.pi) * 1000
+        wdpa_pts["buffer_radius"] = np.sqrt(
+            wdpa_pts["REP_AREA"] / np.pi) * 1000
         wdpa_pts = wdpa_pts.set_geometry(
             wdpa_pts["geometry"].buffer(wdpa_pts["buffer_radius"])
         )
@@ -130,7 +133,8 @@ if __name__ == "__main__":
         # use named function np.greater with partially frozen argument instead
         # and exclude areas where: -max_depth > grid cell depth
         func = functools.partial(np.greater, -config["max_depth"])
-        excluder.add_raster(snakemake.input.gebco, codes=func, crs=4236, nodata=-1000)
+        excluder.add_raster(snakemake.input.gebco,
+                            codes=func, crs=4236, nodata=-1000)
 
     if config.get("min_shore_distance"):
         buffer = config["min_shore_distance"]

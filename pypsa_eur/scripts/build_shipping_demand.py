@@ -11,6 +11,7 @@ import json
 
 import geopandas as gpd
 import pandas as pd
+
 from pypsa_eur.scripts._helpers import set_scenario_config
 
 if __name__ == "__main__":

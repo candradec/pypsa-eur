@@ -15,8 +15,9 @@ import pandas as pd
 import pypsa
 import scipy.sparse as sparse
 import xarray as xr
-from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from shapely.prepared import prep
+
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 

@@ -24,6 +24,7 @@ This functions takes data from the `Minerals Yearbook <https://www.usgs.gov/cent
 
 import country_converter as coco
 import pandas as pd
+
 from pypsa_eur.scripts._helpers import set_scenario_config
 
 cc = coco.CountryConverter()

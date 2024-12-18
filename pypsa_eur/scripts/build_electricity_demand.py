@@ -39,8 +39,13 @@ import logging
 
 import numpy as np
 import pandas as pd
-from pypsa_eur.scripts._helpers import configure_logging, get_snapshots, set_scenario_config
 from pandas import Timedelta as Delta
+
+from pypsa_eur.scripts._helpers import (
+    configure_logging,
+    get_snapshots,
+    set_scenario_config,
+)
 
 logger = logging.getLogger(__name__)
 

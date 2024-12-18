@@ -8,10 +8,11 @@ import logging
 
 import pandas as pd
 import pypsa
-from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from entsoe import EntsoePandasClient
 from entsoe.exceptions import InvalidBusinessParameterError, NoMatchingDataError
 from requests import HTTPError
+
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 

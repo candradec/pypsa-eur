@@ -13,10 +13,13 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import pypsa
-from pypsa_eur.scripts._helpers import configure_logging, retry, set_scenario_config
-from plot_power_network import assign_location, load_projection, rename_techs_tyndp
+from plot_power_network import (assign_location, load_projection,
+                                rename_techs_tyndp)
 from plot_summary import preferred_order
 from pypsa.plot import add_legend_circles, add_legend_lines
+
+from pypsa_eur.scripts._helpers import (configure_logging, retry,
+                                        set_scenario_config)
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +46,8 @@ def plot_map_perfect(
         attr = "e_nom_opt" if comp == "Store" else "p_nom_opt"
 
         active = pd.concat(
-            [n.get_active_assets(comp, inv_p).rename(inv_p) for inv_p in investments],
+            [n.get_active_assets(comp, inv_p).rename(inv_p)
+             for inv_p in investments],
             axis=1,
         ).astype(int)
         capital_cost = n.df(comp)[attr] * n.df(comp).capital_cost
@@ -194,7 +198,8 @@ if __name__ == "__main__":
     map_opts = snakemake.params.plotting["map"]
 
     if map_opts["boundaries"] is None:
-        map_opts["boundaries"] = regions.total_bounds[[0, 2, 1, 3]] + [-1, 1, -1, 1]
+        map_opts["boundaries"] = regions.total_bounds[[
+            0, 2, 1, 3]] + [-1, 1, -1, 1]
 
     proj = load_projection(snakemake.params.plotting)
 

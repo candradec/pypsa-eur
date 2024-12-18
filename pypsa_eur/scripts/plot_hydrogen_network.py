@@ -13,9 +13,11 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import pypsa
-from pypsa_eur.scripts._helpers import configure_logging, retry, set_scenario_config
 from plot_power_network import assign_location, load_projection
 from pypsa.plot import add_legend_circles, add_legend_lines, add_legend_patches
+
+from pypsa_eur.scripts._helpers import (configure_logging, retry,
+                                        set_scenario_config)
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +41,8 @@ def group_pipes(df, drop_direction=False):
         axis=1,
     )
     return df.groupby(level=0).agg(
-        {"p_nom_opt": "sum", "bus0": "first", "bus1": "first", "index_orig": "first"}
+        {"p_nom_opt": "sum", "bus0": "first",
+            "bus1": "first", "index_orig": "first"}
     )
 
 
@@ -72,15 +75,18 @@ def plot_h2_map(n, regions):
     elec = n.links[n.links.carrier.isin(carriers)].index
 
     bus_sizes = (
-        n.links.loc[elec, "p_nom_opt"].groupby([n.links["bus0"], n.links.carrier]).sum()
+        n.links.loc[elec, "p_nom_opt"].groupby(
+            [n.links["bus0"], n.links.carrier]).sum()
         / bus_size_factor
     )
 
     # make a fake MultiIndex so that area is correct for legend
-    bus_sizes.rename(index=lambda x: x.replace(" H2", ""), level=0, inplace=True)
+    bus_sizes.rename(index=lambda x: x.replace(
+        " H2", ""), level=0, inplace=True)
     # drop all links which are not H2 pipelines
     n.links.drop(
-        n.links.index[~n.links.carrier.str.contains("H2 pipeline")], inplace=True
+        n.links.index[~n.links.carrier.str.contains(
+            "H2 pipeline")], inplace=True
     )
 
     h2_new = n.links[n.links.carrier == "H2 pipeline"]
@@ -130,7 +136,8 @@ def plot_h2_map(n, regions):
 
     n.links.rename(index=lambda x: x.split("-2")[0], inplace=True)
     # group links by summing up p_nom values and taking the first value of the rest of the columns
-    other_cols = dict.fromkeys(n.links.columns.drop(["p_nom_opt", "p_nom"]), "first")
+    other_cols = dict.fromkeys(
+        n.links.columns.drop(["p_nom_opt", "p_nom"]), "first")
     n.links = n.links.groupby(level=0).agg(
         {"p_nom_opt": "sum", "p_nom": "sum", **other_cols}
     )
@@ -234,7 +241,8 @@ def plot_h2_map(n, regions):
         legend_kw=legend_kw,
     )
 
-    colors = [bus_colors[c] for c in carriers] + [color_h2_pipe, color_retrofit]
+    colors = [bus_colors[c]
+              for c in carriers] + [color_h2_pipe, color_retrofit]
     labels = carriers + ["H2 pipeline (total)", "H2 pipeline (repurposed)"]
 
     legend_kw = dict(
@@ -274,7 +282,8 @@ if __name__ == "__main__":
     map_opts = snakemake.params.plotting["map"]
 
     if map_opts["boundaries"] is None:
-        map_opts["boundaries"] = regions.total_bounds[[0, 2, 1, 3]] + [-1, 1, -1, 1]
+        map_opts["boundaries"] = regions.total_bounds[[
+            0, 2, 1, 3]] + [-1, 1, -1, 1]
 
     proj = load_projection(snakemake.params.plotting)
 

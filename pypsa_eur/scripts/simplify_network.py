@@ -75,11 +75,13 @@ import numpy as np
 import pandas as pd
 import pypsa
 import scipy as sp
-from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from base_network import append_bus_shapes
 from cluster_network import cluster_regions
-from pypsa.clustering.spatial import busmap_by_stubs, get_clustering_from_busmap
+from pypsa.clustering.spatial import (busmap_by_stubs,
+                                      get_clustering_from_busmap)
 from scipy.sparse.csgraph import connected_components, dijkstra
+
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 
@@ -107,7 +109,8 @@ def simplify_network_to_380(
     n.lines["i_nom"] = n.line_types.i_nom[linetype_380]
     n.lines["num_parallel"] = n.lines.eval("s_nom / (sqrt(3) * v_nom * i_nom)")
 
-    trafo_map = pd.Series(n.transformers.bus1.values, n.transformers.bus0.values)
+    trafo_map = pd.Series(n.transformers.bus1.values,
+                          n.transformers.bus0.values)
     trafo_map = trafo_map[~trafo_map.index.duplicated(keep="first")]
     while (several_trafo_b := trafo_map.isin(trafo_map.index)).any():
         trafo_map[several_trafo_b] = trafo_map[several_trafo_b].map(trafo_map)
@@ -132,13 +135,14 @@ def _remove_clustered_buses_and_branches(n: pypsa.Network, busmap: pd.Series) ->
     n.remove("Bus", buses_to_del)
     for c in n.branch_components:
         df = n.df(c)
-        n.remove(c, df.index[df.bus0.isin(buses_to_del) | df.bus1.isin(buses_to_del)])
+        n.remove(c, df.index[df.bus0.isin(buses_to_del)
+                 | df.bus1.isin(buses_to_del)])
 
 
 def simplify_links(
     n: pypsa.Network, p_max_pu: int | float
 ) -> Tuple[pypsa.Network, pd.Series]:
-    ## Complex multi-node links are folded into end-points
+    # Complex multi-node links are folded into end-points
     logger.info("Simplifying connected link components")
 
     if n.links.empty:
@@ -218,10 +222,12 @@ def simplify_links(
                 continue
 
             logger.debug("nodes = {}".format(labels.index[labels == lbl]))
-            logger.debug("b = {}\nbuses = {}\nlinks = {}".format(b, buses, links))
+            logger.debug(
+                "b = {}\nbuses = {}\nlinks = {}".format(b, buses, links))
 
             m = sp.spatial.distance_matrix(
-                n.buses.loc[b, ["x", "y"]], n.buses.loc[buses[1:-1], ["x", "y"]]
+                n.buses.loc[b, ["x", "y"]
+                            ], n.buses.loc[buses[1:-1], ["x", "y"]]
             )
             busmap.loc[buses] = b[np.r_[0, m.argmin(axis=0), 1]]
 
@@ -236,7 +242,8 @@ def simplify_links(
                 length=sum(
                     n.links.loc[[i for _, i in l], "length"].mean() for l in links
                 ),
-                p_nom=min(n.links.loc[[i for _, i in l], "p_nom"].sum() for l in links),
+                p_nom=min(n.links.loc[[i for _, i in l],
+                          "p_nom"].sum() for l in links),
                 underwater_fraction=sum(
                     lengths
                     / lengths.sum()
@@ -304,11 +311,13 @@ def aggregate_to_substations(
         }
     )
 
-    adj = n.adjacency_matrix(branch_components=["Line", "Link"], weights=weight)
+    adj = n.adjacency_matrix(
+        branch_components=["Line", "Link"], weights=weight)
 
     bus_indexer = n.buses.index.get_indexer(buses_i)
     dist = pd.DataFrame(
-        dijkstra(adj, directed=False, indices=bus_indexer), buses_i, n.buses.index
+        dijkstra(adj, directed=False,
+                 indices=bus_indexer), buses_i, n.buses.index
     )
 
     dist[buses_i] = (
@@ -424,7 +433,8 @@ if __name__ == "__main__":
 
     n = pypsa.Network(snakemake.input.network)
     Nyears = n.snapshot_weightings.objective.sum() / 8760
-    buses_prev, lines_prev, links_prev = len(n.buses), len(n.lines), len(n.links)
+    buses_prev, lines_prev, links_prev = len(
+        n.buses), len(n.lines), len(n.links)
 
     linetype_380 = snakemake.config["lines"]["types"][380]
     n, trafo_map = simplify_network_to_380(n, linetype_380)
@@ -478,11 +488,13 @@ if __name__ == "__main__":
 
     for which in ["regions_onshore", "regions_offshore"]:
         regions = gpd.read_file(snakemake.input[which])
-        clustered_regions = cluster_regions(busmaps, regions, with_country=True)
+        clustered_regions = cluster_regions(
+            busmaps, regions, with_country=True)
         clustered_regions.to_file(snakemake.output[which])
         # append_bus_shapes(n, clustered_regions, type=which.split("_")[1])
 
-    n.meta = dict(snakemake.config, **dict(wildcards=dict(snakemake.wildcards)))
+    n.meta = dict(snakemake.config, **
+                  dict(wildcards=dict(snakemake.wildcards)))
     n.export_to_netcdf(snakemake.output.network)
 
     logger.info(

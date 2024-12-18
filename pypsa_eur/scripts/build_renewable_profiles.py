@@ -124,9 +124,14 @@ import time
 import atlite
 import geopandas as gpd
 import xarray as xr
-from pypsa_eur.scripts._helpers import configure_logging, get_snapshots, set_scenario_config
 from build_shapes import _simplify_polys
 from dask.distributed import Client
+
+from pypsa_eur.scripts._helpers import (
+    configure_logging,
+    get_snapshots,
+    set_scenario_config,
+)
 
 logger = logging.getLogger(__name__)
 

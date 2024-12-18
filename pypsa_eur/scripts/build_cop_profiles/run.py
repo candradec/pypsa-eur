@@ -39,11 +39,11 @@ Outputs
 
 import pandas as pd
 import xarray as xr
-from pypsa_eur.scripts._helpers import set_scenario_config
 from CentralHeatingCopApproximator import CentralHeatingCopApproximator
 from DecentralHeatingCopApproximator import DecentralHeatingCopApproximator
-
 from scripts.definitions.heat_system_type import HeatSystemType
+
+from pypsa_eur.scripts._helpers import set_scenario_config
 
 
 def get_cop(

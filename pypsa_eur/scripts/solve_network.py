@@ -39,14 +39,12 @@ import pypsa
 import xarray as xr
 import yaml
 from _benchmark import memory_logger
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    set_scenario_config,
-    update_config_from_wildcards,
-)
 from prepare_sector_network import get
 from pypsa.descriptors import get_activity_mask
 from pypsa.descriptors import get_switchable_as_dense as get_as_dense
+
+from pypsa_eur.scripts._helpers import (configure_logging, set_scenario_config,
+                                        update_config_from_wildcards)
 
 logger = logging.getLogger(__name__)
 pypsa.pf.logger.setLevel(logging.WARNING)
@@ -127,7 +125,8 @@ def add_land_use_constraint(n):
         "offwind-dc",
         "offwind-float",
     ]:
-        ext_i = (n.generators.carrier == carrier) & ~n.generators.p_nom_extendable
+        ext_i = (n.generators.carrier ==
+                 carrier) & ~n.generators.p_nom_extendable
         existing = (
             n.generators.loc[ext_i, "p_nom"]
             .groupby(n.generators.bus.map(n.buses.location))
@@ -170,7 +169,8 @@ def add_solar_potential_constraints(n, config):
 
     solar_carriers = ["solar", "solar-hsat"]
     solar = n.generators[
-        n.generators.carrier.isin(solar_carriers) & n.generators.p_nom_extendable
+        n.generators.carrier.isin(
+            solar_carriers) & n.generators.p_nom_extendable
     ].index
 
     solar_today = n.generators[
@@ -200,7 +200,8 @@ def add_solar_potential_constraints(n, config):
     ).clip(lower=0)
 
     lhs = (
-        (n.model["Generator-p_nom"].rename(rename).loc[solar] * land_use.squeeze())
+        (n.model["Generator-p_nom"].rename(rename).loc[solar]
+         * land_use.squeeze())
         .groupby(ggrouper)
         .sum()
     )
@@ -252,17 +253,20 @@ def add_carbon_constraint(n, snapshots):
 
         # stores
         bus_carrier = n.stores.bus.map(n.buses.carrier)
-        stores = n.stores[bus_carrier.isin(emissions.index) & ~n.stores.e_cyclic]
+        stores = n.stores[bus_carrier.isin(
+            emissions.index) & ~n.stores.e_cyclic]
         if not stores.empty:
             last = n.snapshot_weightings.reset_index().groupby("period").last()
             last_i = last.set_index([last.index, last.timestep]).index
             final_e = n.model["Store-e"].loc[last_i, stores.index]
             time_valid = int(glc.loc["investment_period"])
             time_i = pd.IndexSlice[time_valid, :]
-            lhs = final_e.loc[time_i, :] - final_e.shift(snapshot=1).loc[time_i, :]
+            lhs = final_e.loc[time_i, :] - \
+                final_e.shift(snapshot=1).loc[time_i, :]
 
             rhs = glc.constant
-            n.model.add_constraints(lhs <= rhs, name=f"GlobalConstraint-{name}")
+            n.model.add_constraints(
+                lhs <= rhs, name=f"GlobalConstraint-{name}")
 
 
 def add_carbon_budget_constraint(n, snapshots):
@@ -278,7 +282,8 @@ def add_carbon_budget_constraint(n, snapshots):
 
         # stores
         bus_carrier = n.stores.bus.map(n.buses.carrier)
-        stores = n.stores[bus_carrier.isin(emissions.index) & ~n.stores.e_cyclic]
+        stores = n.stores[bus_carrier.isin(
+            emissions.index) & ~n.stores.e_cyclic]
         if not stores.empty:
             last = n.snapshot_weightings.reset_index().groupby("period").last()
             last_i = last.set_index([last.index, last.timestep]).index
@@ -289,7 +294,8 @@ def add_carbon_budget_constraint(n, snapshots):
             lhs = final_e.loc[time_i, :] * weighting
 
             rhs = glc.constant
-            n.model.add_constraints(lhs <= rhs, name=f"GlobalConstraint-{name}")
+            n.model.add_constraints(
+                lhs <= rhs, name=f"GlobalConstraint-{name}")
 
 
 def add_max_growth(n):
@@ -324,7 +330,8 @@ def add_retrofit_gas_boiler_constraint(n, snapshots):
     c = "Link"
     logger.info("Add constraint for retrofitting gas boilers to H2 boilers.")
     # existing gas boilers
-    mask = n.links.carrier.str.contains("gas boiler") & ~n.links.p_nom_extendable
+    mask = n.links.carrier.str.contains(
+        "gas boiler") & ~n.links.p_nom_extendable
     gas_i = n.links[mask].index
     mask = n.links.carrier.str.contains("retrofitted H2 boiler")
     h2_i = n.links[mask].index
@@ -476,7 +483,8 @@ def add_CCL_constraints(n, config):
     logger.info("Adding generation capacity constraints per carrier and country")
     p_nom = n.model["Generator-p_nom"]
 
-    gens = n.generators.query("p_nom_extendable").rename_axis(index="Generator-ext")
+    gens = n.generators.query(
+        "p_nom_extendable").rename_axis(index="Generator-ext")
     if config["solving"]["agg_p_nom_limits"]["agg_offwind"]:
         rename_offwind = {
             "offwind-ac": "offwind-all",
@@ -499,7 +507,8 @@ def add_CCL_constraints(n, config):
             gens_cst = gens_cst.replace(rename_offwind)
         rhs_cst = (
             pd.concat(
-                [gens_cst.bus.map(n.buses.country), gens_cst[["carrier", "p_nom"]]],
+                [gens_cst.bus.map(n.buses.country),
+                 gens_cst[["carrier", "p_nom"]]],
                 axis=1,
             )
             .groupby(["bus", "carrier"])
@@ -513,7 +522,8 @@ def add_CCL_constraints(n, config):
         rhs[rhs < 0] = 0
         minimum = xr.DataArray(rhs).rename(dim_0="group")
     else:
-        minimum = xr.DataArray(agg_p_nom_minmax["min"].dropna()).rename(dim_0="group")
+        minimum = xr.DataArray(
+            agg_p_nom_minmax["min"].dropna()).rename(dim_0="group")
 
     index = minimum.indexes["group"].intersection(lhs.indexes["group"])
     if not index.empty:
@@ -529,7 +539,8 @@ def add_CCL_constraints(n, config):
         rhs[rhs < 0] = 0
         maximum = xr.DataArray(rhs).rename(dim_0="group")
     else:
-        maximum = xr.DataArray(agg_p_nom_minmax["max"].dropna()).rename(dim_0="group")
+        maximum = xr.DataArray(
+            agg_p_nom_minmax["max"].dropna()).rename(dim_0="group")
 
     index = maximum.indexes["group"].intersection(lhs.indexes["group"])
     if not index.empty:
@@ -749,9 +760,11 @@ def add_operational_reserve_margin(n, sns, config):
 
     p_max_pu = get_as_dense(n, "Generator", "p_max_pu")
 
-    lhs = dispatch + reserve - capacity_variable * xr.DataArray(p_max_pu[ext_i])
+    lhs = dispatch + reserve - capacity_variable * \
+        xr.DataArray(p_max_pu[ext_i])
 
-    rhs = (p_max_pu[fix_i] * capacity_fixed).reindex(columns=gen_i, fill_value=0)
+    rhs = (p_max_pu[fix_i] *
+           capacity_fixed).reindex(columns=gen_i, fill_value=0)
 
     n.model.add_constraints(lhs <= rhs, name="Generator-p-reserve-upper")
 
@@ -853,12 +866,14 @@ def add_chp_constraints(n):
     if not electric_fix.empty:
         lhs = p.loc[:, electric_fix] + p.loc[:, heat_fix]
         rhs = n.links.p_nom[electric_fix]
-        n.model.add_constraints(lhs <= rhs, name="chplink-top_iso_fuel_line_fix")
+        n.model.add_constraints(
+            lhs <= rhs, name="chplink-top_iso_fuel_line_fix")
 
     # back-pressure
     if not electric.empty:
         lhs = (
-            p.loc[:, heat] * (n.links.efficiency[heat] * n.links.c_b[electric].values)
+            p.loc[:, heat] * (n.links.efficiency[heat] *
+                              n.links.c_b[electric].values)
             - p.loc[:, electric] * n.links.efficiency[electric]
         )
         n.model.add_constraints(lhs <= rhs, name="chplink-backpressure")
@@ -922,13 +937,15 @@ def add_co2_atmosphere_constraint(n, snapshots):
 
         # stores
         bus_carrier = n.stores.bus.map(n.buses.carrier)
-        stores = n.stores[bus_carrier.isin(emissions.index) & ~n.stores.e_cyclic]
+        stores = n.stores[bus_carrier.isin(
+            emissions.index) & ~n.stores.e_cyclic]
         if not stores.empty:
             last_i = snapshots[-1]
             lhs = n.model["Store-e"].loc[last_i, stores.index]
             rhs = glc.constant
 
-            n.model.add_constraints(lhs <= rhs, name=f"GlobalConstraint-{name}")
+            n.model.add_constraints(
+                lhs <= rhs, name=f"GlobalConstraint-{name}")
 
 
 def extra_functionality(n, snapshots):
@@ -996,7 +1013,8 @@ def solve_network(n, config, params, solving, **kwargs):
     )
     kwargs["solver_name"] = solving["solver"]["name"]
     kwargs["extra_functionality"] = extra_functionality
-    kwargs["transmission_losses"] = cf_solving.get("transmission_losses", False)
+    kwargs["transmission_losses"] = cf_solving.get(
+        "transmission_losses", False)
     kwargs["linearized_unit_commitment"] = cf_solving.get(
         "linearized_unit_commitment", False
     )
@@ -1093,7 +1111,8 @@ if __name__ == "__main__":
 
     logger.info(f"Maximum memory usage: {mem.mem_usage}")
 
-    n.meta = dict(snakemake.config, **dict(wildcards=dict(snakemake.wildcards)))
+    n.meta = dict(snakemake.config, **
+                  dict(wildcards=dict(snakemake.wildcards)))
     n.export_to_netcdf(snakemake.output.network)
 
     with open(snakemake.output.config, "w") as file:

@@ -59,10 +59,15 @@ import geopandas as gpd
 import numpy as np
 import pypsa
 import xarray as xr
-from pypsa_eur.scripts._helpers import configure_logging, get_snapshots, set_scenario_config
 from dask.distributed import Client
 from shapely.geometry import LineString as Line
 from shapely.geometry import Point
+
+from pypsa_eur.scripts._helpers import (
+    configure_logging,
+    get_snapshots,
+    set_scenario_config,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -1,0 +1,15 @@
+[flake8]
+max-line-length = 200
+ban-relative-imports = true
+
+enable-extensions=G
+
+# F401: Module imported by unused
+per-file-ignores =
+    __init__.py:F401
+
+extend-ignore =
+    # Required for black
+    E203
+    BLK100
+    E722

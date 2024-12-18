@@ -10,9 +10,10 @@ import logging
 
 import atlite
 import geopandas as gpd
-from pypsa_eur.scripts._helpers import get_snapshots, set_scenario_config
 from atlite.aggregate import aggregate_matrix
 from dask.distributed import Client
+
+from pypsa_eur.scripts._helpers import get_snapshots, set_scenario_config
 
 logger = logging.getLogger(__name__)
 

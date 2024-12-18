@@ -24,6 +24,7 @@ onshore (>50km from sea), offshore (Figure 7).
 
 import geopandas as gpd
 import pandas as pd
+
 from pypsa_eur.scripts._helpers import set_scenario_config
 
 

@@ -9,10 +9,11 @@ Plot clustered electricity transmission network.
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pypsa
-from pypsa_eur.scripts._helpers import set_scenario_config
 from matplotlib.lines import Line2D
 from plot_power_network import load_projection
 from pypsa.plot import add_legend_lines
+
+from pypsa_eur.scripts._helpers import set_scenario_config
 
 if __name__ == "__main__":
     if "snakemake" not in globals():

@@ -29,9 +29,9 @@ Outputs
 """
 
 import geopandas as gpd
-from pypsa_eur.scripts._helpers import set_scenario_config
-
 from scripts.build_heat_source_potentials.onshore_region_data import OnshoreRegionData
+
+from pypsa_eur.scripts._helpers import set_scenario_config
 
 
 def get_unit_conversion_factor(

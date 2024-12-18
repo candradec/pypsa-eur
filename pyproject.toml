@@ -26,6 +26,17 @@ tsam = "*"
 powerplantmatching = "*"
 fiona = "*"
 
+[tool.poetry.group.dev.dependencies]
+black = "*"
+isort = "*"
+nox = "*"
+mypy = "*"
+ruff = "*"
+flake8 = "*"
+flake8-black = "*"
+flake8-isort = "*"
+autopep8 = "*"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

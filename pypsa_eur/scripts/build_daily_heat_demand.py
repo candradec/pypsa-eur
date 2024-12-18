@@ -48,8 +48,9 @@ import atlite
 import geopandas as gpd
 import numpy as np
 import xarray as xr
-from pypsa_eur.scripts._helpers import get_snapshots, set_scenario_config
 from dask.distributed import Client, LocalCluster
+
+from pypsa_eur.scripts._helpers import get_snapshots, set_scenario_config
 
 if __name__ == "__main__":
     if "snakemake" not in globals():

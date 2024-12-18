@@ -28,6 +28,7 @@ Outputs
 from typing import List
 
 import xarray as xr
+
 from pypsa_eur.scripts._helpers import set_scenario_config
 
 

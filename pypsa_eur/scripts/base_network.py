@@ -86,11 +86,17 @@ import shapely
 import shapely.prepared
 import shapely.wkt
 import yaml
-from pypsa_eur.scripts._helpers import REGION_COLS, configure_logging, get_snapshots, set_scenario_config
 from packaging.version import Version, parse
 from scipy.sparse import csgraph
 from scipy.spatial import KDTree
 from shapely.geometry import Point
+
+from pypsa_eur.scripts._helpers import (
+    REGION_COLS,
+    configure_logging,
+    get_snapshots,
+    set_scenario_config,
+)
 
 PD_GE_2_2 = parse(pd.__version__) >= Version("2.2")
 
@@ -174,8 +180,10 @@ def _load_buses(buses, europe_shape, countries, config):
         (v_nom_min <= buses.v_nom) & (buses.v_nom <= v_nom_max)
         | (buses.v_nom.isnull())
         | (
-            buses.carrier == "DC"
-        )  # Keeping all DC buses from the input dataset independent of voltage (e.g. 150 kV connections)
+            buses.carrier
+            == "DC"
+            # Keeping all DC buses from the input dataset independent of voltage (e.g. 150 kV connections)
+        )
     )
 
     logger.info(f"Removing buses outside of range AC {v_nom_min} - {v_nom_max} V")
@@ -454,7 +462,7 @@ def _set_electrical_parameters_converters(converters, config):
 def _set_electrical_parameters_transformers(transformers, config):
     config = config["transformers"]
 
-    ## Add transformer parameters
+    # Add transformer parameters
     transformers["x"] = config.get("x", 0.1)
     if "s_nom" not in transformers:
         transformers["s_nom"] = config.get("s_nom", 2000)

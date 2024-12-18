@@ -7,6 +7,7 @@
 import matplotlib.pyplot as plt
 import pypsa
 import seaborn as sns
+
 from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 sns.set_theme("paper", style="whitegrid")

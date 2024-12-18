@@ -9,6 +9,7 @@ Retrieve electricity prices from OPSD.
 import logging
 
 import pandas as pd
+
 from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)

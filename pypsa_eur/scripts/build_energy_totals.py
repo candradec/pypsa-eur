@@ -47,8 +47,13 @@ import country_converter as coco
 import geopandas as gpd
 import numpy as np
 import pandas as pd
-from pypsa_eur.scripts._helpers import configure_logging, mute_print, set_scenario_config
 from tqdm import tqdm
+
+from pypsa_eur.scripts._helpers import (
+    configure_logging,
+    mute_print,
+    set_scenario_config,
+)
 
 cc = coco.CountryConverter()
 logger = logging.getLogger(__name__)

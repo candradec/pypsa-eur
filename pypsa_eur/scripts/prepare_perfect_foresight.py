@@ -12,14 +12,12 @@ from typing import List
 import numpy as np
 import pandas as pd
 import pypsa
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    set_scenario_config,
-    update_config_from_wildcards,
-)
 from add_existing_baseyear import add_build_year_to_new_assets
 from pypsa.descriptors import expand_series
 from six import iterkeys
+
+from pypsa_eur.scripts._helpers import (configure_logging, set_scenario_config,
+                                        update_config_from_wildcards)
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +88,8 @@ def hvdc_transport_model(n):
     Losses of DC links are assumed to be 3% per 1000km
     """
 
-    logger.info("Convert AC lines to DC links to perform multi-decade optimisation.")
+    logger.info(
+        "Convert AC lines to DC links to perform multi-decade optimisation.")
 
     n.add(
         "Link",
@@ -197,7 +196,8 @@ def concat_networks(years):
                     continue
                 if component.name == "Load":
                     static_load = network.loads.loc[network.loads.p_set != 0]
-                    static_load_t = expand_series(static_load.p_set, network_sns).T
+                    static_load_t = expand_series(
+                        static_load.p_set, network_sns).T
                     pnl_year = pd.concat(
                         [pnl_year.reindex(network_sns), static_load_t], axis=1
                     )
@@ -210,7 +210,8 @@ def concat_networks(years):
                     # time-varying data from the previous investment
                     # period.
                     if i > 0:
-                        pnl[k].loc[(year,)] = pnl[k].loc[(years[i - 1],)].values
+                        pnl[k].loc[(year,)] = pnl[k].loc[(
+                            years[i - 1],)].values
 
                     # Now, add time-varying data for new components.
                     cols = pnl_year.columns.difference(pnl[k].columns)
@@ -250,7 +251,8 @@ def adjust_stores(n):
     n.stores.loc[cyclic_i, "e_cyclic_per_period"] = True
     n.stores.loc[cyclic_i, "e_cyclic"] = False
     # non cyclic store assumptions
-    non_cyclic_store = ["co2", "co2 stored", "solid biomass", "biogas", "EV battery"]
+    non_cyclic_store = ["co2", "co2 stored",
+                        "solid biomass", "biogas", "EV battery"]
     co2_i = n.stores[n.stores.carrier.isin(non_cyclic_store)].index
     n.stores.loc[co2_i, "e_cyclic_per_period"] = False
     n.stores.loc[co2_i, "e_cyclic"] = False
@@ -272,12 +274,15 @@ def set_phase_out(n, carrier, ct, phase_out_year):
     Set planned phase outs for given carrier,country (ct) and planned year of
     phase out (phase_out_year).
     """
-    df = n.links[(n.links.carrier.isin(carrier)) & (n.links.bus1.str[:2] == ct)]
+    df = n.links[(n.links.carrier.isin(carrier))
+                 & (n.links.bus1.str[:2] == ct)]
     # assets which are going to be phased out before end of their lifetime
-    assets_i = df[df[["build_year", "lifetime"]].sum(axis=1) > phase_out_year].index
+    assets_i = df[df[["build_year", "lifetime"]].sum(
+        axis=1) > phase_out_year].index
     build_year = n.links.loc[assets_i, "build_year"]
     # adjust lifetime
-    n.links.loc[assets_i, "lifetime"] = (phase_out_year - build_year).astype(float)
+    n.links.loc[assets_i, "lifetime"] = (
+        phase_out_year - build_year).astype(float)
 
 
 def set_all_phase_outs(n):
@@ -303,7 +308,8 @@ def set_all_phase_outs(n):
     for carrier, ct, phase_out_year in planned:
         set_phase_out(n, carrier, ct, phase_out_year)
     # remove assets which are already phased out
-    remove_i = n.links[n.links[["build_year", "lifetime"]].sum(axis=1) < years[0]].index
+    remove_i = n.links[n.links[["build_year", "lifetime"]].sum(
+        axis=1) < years[0]].index
     n.remove("Link", remove_i)
 
 
@@ -327,7 +333,8 @@ def set_carbon_constraints(n):
         )
 
         # drop other CO2 limits
-        drop_i = n.global_constraints[n.global_constraints.type == "co2_limit"].index
+        drop_i = n.global_constraints[n.global_constraints.type ==
+                                      "co2_limit"].index
         n.remove("GlobalConstraint", drop_i)
 
         n.add(
@@ -349,7 +356,8 @@ def set_carbon_constraints(n):
         first_year = n.snapshots.levels[0][0]
         time_weightings = n.investment_period_weightings.loc[first_year, "years"]
         co2min = emissions_2019 - ((first_year - 2019) * annual_reduction)
-        logger.info(f"add minimum emissions for {first_year} of {co2min} t CO2/a")
+        logger.info(
+            f"add minimum emissions for {first_year} of {co2min} t CO2/a")
         n.add(
             "GlobalConstraint",
             f"Co2Min-{first_year}",
@@ -400,7 +408,8 @@ def add_H2_boilers(n):
     c = "Link"
     logger.info("Add H2 boilers.")
     # existing gas boilers
-    mask = n.links.carrier.str.contains("gas boiler") & ~n.links.p_nom_extendable
+    mask = n.links.carrier.str.contains(
+        "gas boiler") & ~n.links.p_nom_extendable
     gas_i = n.links[mask].index
     df = n.links.loc[gas_i]
     # adjust bus 0
@@ -443,14 +452,16 @@ def apply_time_segmentation_perfect(
         )
 
     # get all time-dependent data
-    columns = pd.MultiIndex.from_tuples([], names=["component", "key", "asset"])
+    columns = pd.MultiIndex.from_tuples(
+        [], names=["component", "key", "asset"])
     raw = pd.DataFrame(index=n.snapshots, columns=columns)
     for c in n.iterate_components():
         for attr, pnl in c.pnl.items():
             # exclude e_min_pu which is used for SOC of EVs in the morning
             if not pnl.empty and attr != "e_min_pu":
                 df = pnl.copy()
-                df.columns = pd.MultiIndex.from_product([[c.name], [attr], df.columns])
+                df.columns = pd.MultiIndex.from_product(
+                    [[c.name], [attr], df.columns])
                 raw = pd.concat([raw, df], axis=1)
     raw = raw.dropna(axis=1)
     sn_weightings = {}
@@ -474,7 +485,8 @@ def apply_time_segmentation_perfect(
 
         weightings = segmented.index.get_level_values("Segment Duration")
         offsets = np.insert(np.cumsum(weightings[:-1]), 0, 0)
-        timesteps = [raw_t.index[0] + pd.Timedelta(f"{offset}h") for offset in offsets]
+        timesteps = [raw_t.index[0] +
+                     pd.Timedelta(f"{offset}h") for offset in offsets]
         snapshots = pd.DatetimeIndex(timesteps)
         sn_weightings[year] = pd.Series(
             weightings, index=snapshots, name="weightings", dtype="float64"
@@ -550,7 +562,8 @@ if __name__ == "__main__":
     solver_name = snakemake.config["solving"]["solver"]["name"]
     segments = snakemake.params.time_resolution
     if isinstance(segments, (int, float)):
-        n = apply_time_segmentation_perfect(n, segments, solver_name=solver_name)
+        n = apply_time_segmentation_perfect(
+            n, segments, solver_name=solver_name)
 
     # adjust global constraints lv limit if the same for all years
     n = adjust_lvlimit(n)
@@ -569,7 +582,8 @@ if __name__ == "__main__":
     n = set_carbon_constraints(n)
 
     # update meta
-    n.meta = dict(snakemake.config, **dict(wildcards=dict(snakemake.wildcards)))
+    n.meta = dict(snakemake.config, **
+                  dict(wildcards=dict(snakemake.wildcards)))
 
     # update heat pump efficiency
     update_heat_pump_efficiency(n=n, years=years)

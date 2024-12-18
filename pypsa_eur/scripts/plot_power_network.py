@@ -14,9 +14,11 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import pypsa
-from pypsa_eur.scripts._helpers import configure_logging, rename_techs, retry, set_scenario_config
 from plot_summary import preferred_order
 from pypsa.plot import add_legend_circles, add_legend_lines, add_legend_patches
+
+from pypsa_eur.scripts._helpers import (configure_logging, rename_techs, retry,
+                                        set_scenario_config)
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +117,8 @@ def plot_map(
     costs = costs.stack()  # .sort_index()
 
     # hack because impossible to drop buses...
-    eu_location = snakemake.params.plotting.get("eu_node_location", dict(x=-5.5, y=46))
+    eu_location = snakemake.params.plotting.get(
+        "eu_node_location", dict(x=-5.5, y=46))
     n.buses.loc["EU gas", "x"] = eu_location["x"]
     n.buses.loc["EU gas", "y"] = eu_location["y"]
 
@@ -267,7 +270,8 @@ if __name__ == "__main__":
     map_opts = snakemake.params.plotting["map"]
 
     if map_opts["boundaries"] is None:
-        map_opts["boundaries"] = regions.total_bounds[[0, 2, 1, 3]] + [-1, 1, -1, 1]
+        map_opts["boundaries"] = regions.total_bounds[[
+            0, 2, 1, 3]] + [-1, 1, -1, 1]
 
     proj = load_projection(snakemake.params.plotting)
 

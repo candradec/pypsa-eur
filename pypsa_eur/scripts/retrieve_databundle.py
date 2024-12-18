@@ -27,12 +27,8 @@ import logging
 import tarfile
 from pathlib import Path
 
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    progress_retrieve,
-    set_scenario_config,
-    validate_checksum,
-)
+from pypsa_eur.scripts._helpers import (configure_logging, progress_retrieve,
+                                        set_scenario_config, validate_checksum)
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +50,8 @@ if __name__ == "__main__":
     to_fn = Path(rootpath) / Path(snakemake.output[0]).parent.parent
 
     logger.info(f"Downloading databundle from '{url}'.")
-    disable_progress = snakemake.config["run"].get("disable_progressbar", False)
+    disable_progress = snakemake.config["run"].get(
+        "disable_progressbar", False)
     progress_retrieve(url, tarball_fn, disable=disable_progress)
 
     validate_checksum(tarball_fn, url)

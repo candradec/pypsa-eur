@@ -50,6 +50,7 @@ The unit of the specific energy consumption is MWh/t material and tCO2/t materia
 
 import country_converter as coco
 import pandas as pd
+
 from pypsa_eur.scripts._helpers import mute_print, set_scenario_config
 
 cc = coco.CountryConverter()
@@ -135,7 +136,7 @@ def iron_and_steel():
 
     df = pd.DataFrame(index=index)
 
-    ## Electric arc
+    # Electric arc
 
     sector = "Electric arc"
 
@@ -206,7 +207,7 @@ def iron_and_steel():
     sel = ["elec", "heat", "methane"]
     df.loc[sel, sector] = df.loc[sel, sector] * toe_to_MWh / s_out[sector]
 
-    ## DRI + Electric arc
+    # DRI + Electric arc
     # For primary route: DRI with H2 + EAF
 
     sector = "DRI + Electric arc"
@@ -219,7 +220,7 @@ def iron_and_steel():
     # add electricity consumption in DRI shaft (0.322 MWh/tSl)
     df.at["elec", sector] += params["elec_DRI"]
 
-    ## Integrated steelworks
+    # Integrated steelworks
     # could be used in combination with CCS)
     # Assume existing fuels are kept, except for furnaces, refining, rolling, finishing
     # Ignore 'derived gases' since these are top gases from furnaces
@@ -453,13 +454,16 @@ def chemicals_industry():
 
     # subtract chlorine demand (in MtCl/a)
     chlorine_total = params["chlorine_production_today"]
-    df.loc["hydrogen", sector] -= chlorine_total * params["MWh_H2_per_tCl"] * 1e3
+    df.loc["hydrogen", sector] -= chlorine_total * \
+        params["MWh_H2_per_tCl"] * 1e3
     df.loc["elec", sector] -= chlorine_total * params["MWh_elec_per_tCl"] * 1e3
 
     # subtract methanol demand (in MtMeOH/a)
     methanol_total = params["methanol_production_today"]
-    df.loc["methane", sector] -= methanol_total * params["MWh_CH4_per_tMeOH"] * 1e3
-    df.loc["elec", sector] -= methanol_total * params["MWh_elec_per_tMeOH"] * 1e3
+    df.loc["methane", sector] -= methanol_total * \
+        params["MWh_CH4_per_tMeOH"] * 1e3
+    df.loc["elec", sector] -= methanol_total * \
+        params["MWh_elec_per_tMeOH"] * 1e3
 
     # MWh/t material
     df.loc[sources, sector] = df.loc[sources, sector] / s_out
@@ -573,7 +577,8 @@ def chemicals_industry():
 
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
-    df.loc[sources, sector] = df.loc[sources, sector] * toe_to_MWh / s_out.values
+    df.loc[sources, sector] = df.loc[sources,
+                                     sector] * toe_to_MWh / s_out.values
 
     # Pharmaceutical products
 
@@ -642,7 +647,8 @@ def chemicals_industry():
 
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
-    df.loc[sources, sector] = df.loc[sources, sector] * toe_to_MWh / s_out.values
+    df.loc[sources, sector] = df.loc[sources,
+                                     sector] * toe_to_MWh / s_out.values
 
     return df
 
@@ -696,7 +702,8 @@ def nonmetalic_mineral_products():
     df.loc["elec", sector] += s_fec["Cement: Grinding, milling of raw material"]
     df.loc["biomass", sector] += s_fec["Biomass and waste"]
     df.loc["methane", sector] += (
-        s_fec["Cement: Pre-heating and pre-calcination"] - s_fec["Biomass and waste"]
+        s_fec["Cement: Pre-heating and pre-calcination"] -
+        s_fec["Biomass and waste"]
     )
 
     subsector = "Cement: Clinker production (kilns)"
@@ -708,7 +715,8 @@ def nonmetalic_mineral_products():
 
     df.loc["biomass", sector] += s_fec["Biomass and waste"]
     df.loc["methane", sector] += (
-        s_fec["Cement: Clinker production (kilns)"] - s_fec["Biomass and waste"]
+        s_fec["Cement: Clinker production (kilns)"] -
+        s_fec["Biomass and waste"]
     )
     df.loc["elec", sector] += s_fec["Cement: Grinding, packaging and precasting"]
 
@@ -729,7 +737,8 @@ def nonmetalic_mineral_products():
 
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
-    df.loc[sources, sector] = df.loc[sources, sector] * toe_to_MWh / s_out.values
+    df.loc[sources, sector] = df.loc[sources,
+                                     sector] * toe_to_MWh / s_out.values
 
     # Ceramics & other NMM
 
@@ -789,7 +798,8 @@ def nonmetalic_mineral_products():
 
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
-    df.loc[sources, sector] = df.loc[sources, sector] * toe_to_MWh / s_out.values
+    df.loc[sources, sector] = df.loc[sources,
+                                     sector] * toe_to_MWh / s_out.values
 
     # Glass production
 
@@ -839,7 +849,8 @@ def nonmetalic_mineral_products():
 
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
-    df.loc[sources, sector] = df.loc[sources, sector] * toe_to_MWh / s_out.values
+    df.loc[sources, sector] = df.loc[sources,
+                                     sector] * toe_to_MWh / s_out.values
 
     return df
 
@@ -966,7 +977,8 @@ def pulp_paper_printing():
 
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
-    df.loc[sources, sector] = df.loc[sources, sector] * toe_to_MWh / s_out.values
+    df.loc[sources, sector] = df.loc[sources,
+                                     sector] * toe_to_MWh / s_out.values
 
     # Printing and media reproduction
 
@@ -998,7 +1010,8 @@ def pulp_paper_printing():
 
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
-    df.loc[sources, sector] = df.loc[sources, sector] * toe_to_MWh / s_out.values
+    df.loc[sources, sector] = df.loc[sources,
+                                     sector] * toe_to_MWh / s_out.values
 
     return df
 
@@ -1174,7 +1187,8 @@ def non_ferrous_metals():
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
     df.loc[sources, sector] = (
-        df.loc[sources, sector] * toe_to_MWh / s_out["Aluminium - primary production"]
+        df.loc[sources, sector] * toe_to_MWh /
+        s_out["Aluminium - primary production"]
     )
 
     # Aluminium secondary route
@@ -1216,7 +1230,8 @@ def non_ferrous_metals():
     # MWh/t material
     sources = ["elec", "biomass", "methane", "hydrogen", "heat", "naphtha"]
     df.loc[sources, sector] = (
-        df.loc[sources, sector] * toe_to_MWh / s_out["Aluminium - secondary production"]
+        df.loc[sources, sector] * toe_to_MWh /
+        s_out["Aluminium - secondary production"]
     )
 
     # Other non-ferrous metals
@@ -1257,7 +1272,8 @@ def non_ferrous_metals():
 
     # tCO2/t material
     df.loc["process emission", sector] = (
-        s_emi["Process emissions"] / s_out["Other non-ferrous metals (kt lead eq.)"]
+        s_emi["Process emissions"] /
+        s_out["Other non-ferrous metals (kt lead eq.)"]
     )
 
     # MWh/t material
@@ -1403,7 +1419,8 @@ def textiles_and_leather():
     df.loc["elec", sector] += s_fec["Textiles: Finishing Electric"]
 
     # Steam processing is supplied with biomass
-    eff_biomass = s_ued[15:26]["Biomass and waste"] / s_fec[15:26]["Biomass and waste"]
+    eff_biomass = s_ued[15:26]["Biomass and waste"] / \
+        s_fec[15:26]["Biomass and waste"]
     df.loc["biomass", sector] += (
         s_ued["Textiles: Pretreatment with steam"] / eff_biomass
     )
@@ -1451,7 +1468,8 @@ def wood_and_wood_products():
     df.loc["elec", sector] += s_fec["Wood: Finishing Electric"]
 
     # Steam processing is supplied with biomass
-    eff_biomass = s_ued[15:25]["Biomass and waste"] / s_fec[15:25]["Biomass and waste"]
+    eff_biomass = s_ued[15:25]["Biomass and waste"] / \
+        s_fec[15:25]["Biomass and waste"]
     df.loc["biomass", sector] += (
         s_ued["Wood: Specific processes with steam"] / eff_biomass
     )
@@ -1511,7 +1529,8 @@ def other_industrial_sectors():
     df.loc["elec", sector] += s_fec[key]
 
     # Steam processing is supplied with biomass
-    eff_biomass = s_ued[15:25]["Biomass and waste"] / s_fec[15:25]["Biomass and waste"]
+    eff_biomass = s_ued[15:25]["Biomass and waste"] / \
+        s_fec[15:25]["Biomass and waste"]
     df.loc["biomass", sector] += (
         s_ued["Other Industrial sectors: Steam processing"] / eff_biomass
     )

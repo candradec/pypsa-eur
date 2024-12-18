@@ -65,8 +65,13 @@ import atlite
 import country_converter as coco
 import geopandas as gpd
 import pandas as pd
-from pypsa_eur.scripts._helpers import configure_logging, get_snapshots, set_scenario_config
 from numpy.polynomial import Polynomial
+
+from pypsa_eur.scripts._helpers import (
+    configure_logging,
+    get_snapshots,
+    set_scenario_config,
+)
 
 cc = coco.CountryConverter()
 

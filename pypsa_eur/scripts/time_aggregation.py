@@ -48,11 +48,9 @@ import pandas as pd
 import pypsa
 import tsam.timeseriesaggregation as tsam
 import xarray as xr
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    set_scenario_config,
-    update_config_from_wildcards,
-)
+
+from pypsa_eur.scripts._helpers import (configure_logging, set_scenario_config,
+                                        update_config_from_wildcards)
 
 logger = logging.getLogger(__name__)
 

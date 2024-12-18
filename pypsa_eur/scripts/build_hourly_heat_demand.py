@@ -34,7 +34,12 @@ from itertools import product
 
 import pandas as pd
 import xarray as xr
-from pypsa_eur.scripts._helpers import generate_periodic_profiles, get_snapshots, set_scenario_config
+
+from pypsa_eur.scripts._helpers import (
+    generate_periodic_profiles,
+    get_snapshots,
+    set_scenario_config,
+)
 
 if __name__ == "__main__":
     if "snakemake" not in globals():

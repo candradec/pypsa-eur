@@ -51,7 +51,7 @@ sys.path.insert(0, os.path.abspath("../scripts"))
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    #'sphinx.ext.autosummary',
+    # 'sphinx.ext.autosummary',
     "myst_parser",
     # "sphinx.ext.autosectionlabel",
     "sphinx.ext.intersphinx",
@@ -60,9 +60,9 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.graphviz",
     "sphinxcontrib.bibtex",
-    #'sphinx.ext.pngmath',
-    #'sphinxcontrib.tikz',
-    #'rinoh.frontend.sphinx',
+    # 'sphinx.ext.pngmath',
+    # 'sphinxcontrib.tikz',
+    # 'rinoh.frontend.sphinx',
     "sphinx.ext.imgconverter",  # for SVG conversion
 ]
 
@@ -266,13 +266,13 @@ htmlhelp_basename = "PyPSAEurdoc"
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
+    # 'papersize': 'letterpaper',
     # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
+    # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
-    #'preamble': '',
+    # 'preamble': '',
     # Latex figure (float) alignment
-    #'figure_align': 'htbp',
+    # 'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

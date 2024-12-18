@@ -12,13 +12,14 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import pypsa
-from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from pyproj import Transformer
 from shapely import prepare
 from shapely.algorithms.polylabel import polylabel
 from shapely.geometry import LineString, MultiLineString, Point
 from shapely.ops import linemerge, split
 from tqdm import tqdm
+
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 
@@ -408,7 +409,8 @@ def _create_merge_mapping(lines, buses, buses_polygon, geo_crs=GEO_CRS):
         subgraph = G.subgraph(component)
 
         # Extract the first node in the component
-        first_node = next(iter(component))  # Get the first node (can be arbitrary)
+        # Get the first node (can be arbitrary)
+        first_node = next(iter(component))
 
         # Extract the attributes for the first node
         circuits = G.nodes[first_node].get(
@@ -493,7 +495,7 @@ def _merge_lines_over_virtual_buses(
     buses_merged = buses_merged[~buses_merged["bus_id"].isin(buses_to_remove)]
     # Add new lines from merged_lines_map to lines_merged
 
-    ### Update lines to add
+    # Update lines to add
     lines_to_add = merged_lines_map.copy().reset_index(drop=True)
 
     # Update columns
@@ -1195,7 +1197,8 @@ def _add_dc_buses(
         - GeoDataFrame: A GeoDataFrame containing the DC buses with their corresponding PoI and mapped to the nearest AC bus.
     """
     dc_buses = converters_polygon.copy()
-    max_distance = 50000  # m, Arbitrary, maximum distance between DC bus and AC bus (value needs to be high for Gotland HVDC to be connected)
+    # m, Arbitrary, maximum distance between DC bus and AC bus (value needs to be high for Gotland HVDC to be connected)
+    max_distance = 50000
 
     logger.info(
         "Adding DC buses to the network and mapping them to the nearest AC buses."
@@ -1273,7 +1276,8 @@ def _map_links_to_dc_buses(links, dc_buses, distance_crs=DISTANCE_CRS):
     """
     logger.info("Mapping links to DC buses based on geographical proximity.")
     links_all = links.copy().set_index("link_id")
-    max_distance = 120000  # m, arbitrary maximum relevant for islands, and if second country is missing
+    # m, arbitrary maximum relevant for islands, and if second country is missing
+    max_distance = 120000
     dc_buses_all = dc_buses.copy().set_index("bus_id")
     dc_buses_polygon = gpd.GeoDataFrame(
         dc_buses_all["polygon"], geometry="polygon", crs=dc_buses.crs
@@ -1486,7 +1490,7 @@ def build_network(
     lines = gpd.read_file(inputs["lines"])
     lines = _merge_identical_lines(lines)
 
-    ### DATA PROCESSING (AC)
+    # DATA PROCESSING (AC)
     buses_line_endings = _add_line_endings(buses, lines)
     buses = pd.concat([buses, buses_line_endings], ignore_index=True)
 
@@ -1550,7 +1554,7 @@ def build_network(
     # Add transformers
     transformers = _add_transformers(buses)
 
-    ### DATA PROCESSING (DC)
+    # DATA PROCESSING (DC)
     links = gpd.read_file(inputs["links"])
     converters_polygon = gpd.read_file(inputs["converters_polygon"])
 
@@ -1594,7 +1598,7 @@ def build_network(
         ]
     )
 
-    ### Saving outputs to PyPSA-compatible format
+    # Saving outputs to PyPSA-compatible format
     buses_final, converters_final, lines_final, links_final, transformers_final = (
         _finalise_network(all_buses, converters, lines, links, transformers)
     )

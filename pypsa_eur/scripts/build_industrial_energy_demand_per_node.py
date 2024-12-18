@@ -37,6 +37,7 @@ which can later be used as values for the industry load.
 """
 
 import pandas as pd
+
 from pypsa_eur.scripts._helpers import set_scenario_config
 
 if __name__ == "__main__":

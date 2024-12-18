@@ -11,8 +11,10 @@ import logging
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import pandas as pd
-from pypsa_eur.scripts._helpers import configure_logging, rename_techs, set_scenario_config
 from prepare_sector_network import co2_emissions_year
+
+from pypsa_eur.scripts._helpers import (configure_logging, rename_techs,
+                                        set_scenario_config)
 
 logger = logging.getLogger(__name__)
 plt.style.use("ggplot")
@@ -73,7 +75,8 @@ def plot_costs():
 
     df = df.groupby(df.index.map(rename_techs)).sum()
 
-    to_drop = df.index[df.max(axis=1) < snakemake.params.plotting["costs_threshold"]]
+    to_drop = df.index[df.max(
+        axis=1) < snakemake.params.plotting["costs_threshold"]]
 
     logger.info(
         f"Dropping technology with costs below {snakemake.params['plotting']['costs_threshold']} EUR billion per year"
@@ -82,7 +85,8 @@ def plot_costs():
 
     df = df.drop(to_drop)
 
-    logger.info(f"Total system cost of {round(df.sum().iloc[0])} EUR billion per year")
+    logger.info(
+        f"Total system cost of {round(df.sum().iloc[0])} EUR billion per year")
 
     new_index = preferred_order.intersection(df.index).append(
         df.index.difference(preferred_order)
@@ -229,7 +233,8 @@ def plot_balances():
         df = df.groupby(df.index.map(rename_techs)).sum()
 
         to_drop = df.index[
-            df.abs().max(axis=1) < snakemake.params.plotting["energy_threshold"] / 10
+            df.abs().max(
+                axis=1) < snakemake.params.plotting["energy_threshold"] / 10
         ]
 
         units = "MtCO2/a" if v[0] in co2_carriers else "TWh/a"
@@ -241,7 +246,7 @@ def plot_balances():
         df = df.drop(to_drop)
 
         logger.debug(
-            f"Total energy balance for {v} of {round(df.sum().iloc[0],2)} {units}"
+            f"Total energy balance for {v} of {round(df.sum().iloc[0], 2)} {units}"
         )
 
         if df.empty:
@@ -259,7 +264,8 @@ def plot_balances():
             kind="bar",
             ax=ax,
             stacked=True,
-            color=[snakemake.params.plotting["tech_colors"][i] for i in new_index],
+            color=[snakemake.params.plotting["tech_colors"][i]
+                   for i in new_index],
         )
 
         handles, labels = ax.get_legend_handles_labels()
@@ -285,7 +291,8 @@ def plot_balances():
             frameon=False,
         )
 
-        fig.savefig(snakemake.output.balances[:-10] + k + ".svg", bbox_inches="tight")
+        fig.savefig(
+            snakemake.output.balances[:-10] + k + ".svg", bbox_inches="tight")
         plt.close(fig)
 
 
@@ -342,7 +349,8 @@ def historical_emissions(countries):
         .rename(index=pd.Series(e.index, e.values))
     )
 
-    co2_totals = (1 / 1e6) * co2_totals.groupby(level=0, axis=0).sum()  # Gton CO2
+    co2_totals = (1 / 1e6) * co2_totals.groupby(level=0,
+                                                axis=0).sum()  # Gton CO2
 
     co2_totals.loc["industrial non-elec"] = (
         co2_totals.loc["total energy"]
@@ -363,7 +371,8 @@ def historical_emissions(countries):
 
     emissions = co2_totals.loc["electricity"]
     if options["transport"]:
-        emissions += co2_totals.loc[[i + " non-elec" for i in ["rail", "road"]]].sum()
+        emissions += co2_totals.loc[[i +
+                                     " non-elec" for i in ["rail", "road"]]].sum()
     if options["heating"]:
         emissions += co2_totals.loc[
             [i + " non-elec" for i in ["residential", "services"]]
@@ -426,7 +435,8 @@ def plot_carbon_budget_distribution(input_eurostat, options):
             snakemake.input.balances, index_col=[0, 1, 2], header=[0, 1, 2, 3]
         )
         co2_cap = (
-            supply_energy.loc["co2"].droplevel(0).drop("co2").sum().unstack().T / 1e9
+            supply_energy.loc["co2"].droplevel(
+                0).drop("co2").sum().unstack().T / 1e9
         )
         co2_cap.rename(index=lambda x: int(x), inplace=True)
 

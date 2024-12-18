@@ -12,8 +12,9 @@ import logging
 
 import geopandas as gpd
 import pandas as pd
-from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from cluster_gas_network import load_bus_regions
+
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +107,8 @@ def build_gas_input_locations(gem_fn, entry_fn, sto_fn, countries):
     entry = entry.loc[
         ~(entry.from_country.isin(countries) & entry.to_country.isin(countries))
         & ~entry.name.str.contains("Tegelen")  # only take non-EU entries
-        | (entry.from_country == "NO")  # malformed datapoint  # entries from NO to GB
+        # malformed datapoint  # entries from NO to GB
+        | (entry.from_country == "NO")
     ].copy()
 
     sto = read_scigrid_gas(sto_fn)
@@ -117,7 +119,7 @@ def build_gas_input_locations(gem_fn, entry_fn, sto_fn, countries):
     prod = build_gem_prod_data(gem_fn)
 
     mcm_per_day_to_mw = 437.5  # MCM/day to MWh/h
-    mcm_per_year_to_mw = 1.199  #  MCM/year to MWh/h
+    mcm_per_year_to_mw = 1.199  # MCM/year to MWh/h
     mtpa_to_mw = 1649.224  # mtpa to MWh/h
     mcm_to_gwh = 11.36  # MCM to GWh
     lng["capacity"] = lng["CapacityInMtpa"] * mtpa_to_mw

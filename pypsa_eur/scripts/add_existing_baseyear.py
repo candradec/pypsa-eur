@@ -16,16 +16,17 @@ import pandas as pd
 import powerplantmatching as pm
 import pypsa
 import xarray as xr
-from pypsa_eur.scripts._helpers import (
-    configure_logging,
-    set_scenario_config,
-    update_config_from_wildcards,
-)
 from add_electricity import sanitize_carriers
 from definitions.heat_sector import HeatSector
 from definitions.heat_system import HeatSystem
 from definitions.heat_system_type import HeatSystemType
 from prepare_sector_network import cluster_heat_buses, define_spatial, prepare_costs
+
+from pypsa_eur.scripts._helpers import (
+    configure_logging,
+    set_scenario_config,
+    update_config_from_wildcards,
+)
 
 logger = logging.getLogger(__name__)
 cc = coco.CountryConverter()
@@ -328,7 +329,8 @@ def add_power_capacities_installed_before_baseyear(n, grouping_years, costs, bas
                         marginal_cost=costs.at[generator, "efficiency"]
                         * costs.at[generator, "VOM"],  # NB: VOM is per MWel
                         capital_cost=costs.at[generator, "efficiency"]
-                        * costs.at[generator, "fixed"],  # NB: fixed cost is per MWel
+                        # NB: fixed cost is per MWel
+                        * costs.at[generator, "fixed"],
                         p_nom=new_capacity / costs.at[generator, "efficiency"],
                         efficiency=costs.at[generator, "efficiency"],
                         efficiency2=costs.at[carrier[generator], "CO2 intensity"],

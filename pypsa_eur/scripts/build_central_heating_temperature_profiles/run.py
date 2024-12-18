@@ -41,10 +41,11 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 import xarray as xr
-from pypsa_eur.scripts._helpers import set_scenario_config
 from central_heating_temperature_approximator import (
     CentralHeatingTemperatureApproximator,
 )
+
+from pypsa_eur.scripts._helpers import set_scenario_config
 
 
 def extrapolate_missing_supply_temperatures_by_country(

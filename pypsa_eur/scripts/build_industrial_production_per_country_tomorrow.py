@@ -60,8 +60,9 @@ The unit of the production is kt/a.
 """
 
 import pandas as pd
-from pypsa_eur.scripts._helpers import set_scenario_config
 from prepare_sector_network import get
+
+from pypsa_eur.scripts._helpers import set_scenario_config
 
 if __name__ == "__main__":
     if "snakemake" not in globals():

@@ -77,8 +77,9 @@ import country_converter as coco
 import geopandas as gpd
 import numpy as np
 import pandas as pd
-from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 from shapely.geometry import MultiPolygon, Polygon
+
+from pypsa_eur.scripts._helpers import configure_logging, set_scenario_config
 
 logger = logging.getLogger(__name__)
 

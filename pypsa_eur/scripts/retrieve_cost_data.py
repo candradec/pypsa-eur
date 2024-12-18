@@ -9,7 +9,8 @@ Retrieve cost data from ``technology-data``.
 import logging
 from pathlib import Path
 
-from pypsa_eur.scripts._helpers import configure_logging, progress_retrieve, set_scenario_config
+from pypsa_eur.scripts._helpers import (configure_logging, progress_retrieve,
+                                        set_scenario_config)
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,8 @@ if __name__ == "__main__":
     print(to_fn)
 
     logger.info(f"Downloading technology data from '{url}'.")
-    disable_progress = snakemake.config["run"].get("disable_progressbar", False)
+    disable_progress = snakemake.config["run"].get(
+        "disable_progressbar", False)
     progress_retrieve(url, to_fn, disable=disable_progress)
 
     logger.info(f"Technology data available at at {to_fn}")
